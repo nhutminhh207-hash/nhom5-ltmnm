@@ -1,0 +1,45 @@
+<%- include('../partials/header') %>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h1 class="h3 font-weight-bold mb-3 text-center">Đăng ký tài khoản</h1>
+          <p class="text-muted text-center mb-4">Tạo tài khoản để trải nghiệm mua sắm thời trang tuyệt vời</p>
+
+          <form method="POST" action="/register">
+            <div class="form-group">
+              <label for="name" class="font-weight-medium">Họ tên <span class="text-danger">*</span></label>
+              <input required class="form-control" id="name" name="name" type="text" value="<%= typeof old !== 'undefined' && old.name ? old.name : '' %>" placeholder="Họ và tên của bạn">
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="font-weight-medium">Email <span class="text-danger">*</span></label>
+              <input required class="form-control" id="email" name="email" type="email" value="<%= typeof old !== 'undefined' && old.email ? old.email : '' %>" placeholder="name@example.com">
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="font-weight-medium">Mật khẩu (tối thiểu 8 ký tự) <span class="text-danger">*</span></label>
+              <input required class="form-control" id="password" name="password" type="password" minlength="8" placeholder="Tối thiểu 8 ký tự">
+            </div>
+
+            <div class="form-group">
+              <label for="password_confirmation" class="font-weight-medium">Nhập lại mật khẩu <span class="text-danger">*</span></label>
+              <input required class="form-control" id="password_confirmation" name="password_confirmation" type="password" minlength="8" placeholder="Nhập lại mật khẩu">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block py-2 font-weight-bold">Tạo tài khoản</button>
+          </form>
+
+          <div class="text-center mt-3">
+            <span class="text-muted">Đã có tài khoản?</span>
+            <a href="/login" class="font-weight-bold text-primary ml-1">Đăng nhập ngay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

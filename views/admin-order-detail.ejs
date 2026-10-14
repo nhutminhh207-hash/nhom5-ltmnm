@@ -1,0 +1,142 @@
+<%- include('partials/header') %>
+
+<div class="container-fluid bg-secondary mb-4">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height:180px">
+    <h1 class="font-weight-semi-bold text-uppercase mb-2">Admin — Chi tiết đơn #<%= order.id %></h1>
+    <div class="d-inline-flex">
+      <a href="/" class="text-dark font-weight-medium">Trang chủ</a>
+      <span class="px-2 text-dark">-</span>
+      <a href="/admin/orders" class="text-dark font-weight-medium">Admin Đơn hàng</a>
+      <span class="px-2 text-dark">-</span>
+      <span class="text-primary font-weight-bold">#<%= order.id %></span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid pt-2 px-xl-5">
+  <h1 class="h3">Admin — Đơn #<%= order.id %></h1>
+  <div class="foundation">
+    Người phụ trách: <strong>Kiều</strong>. Quản trị trạng thái đơn hàng theo vòng đời (pending &rarr; confirmed &rarr; shipping &rarr; completed; pending/confirmed &rarr; cancelled).
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8 mb-4">
+      <div class="card shadow-sm border-0 bg-white">
+        <div class="card-header bg-white border-bottom">
+          <h5 class="mb-0 font-weight-semi-bold">Danh sách sản phẩm trong đơn</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table mb-0">
+              <thead class="thead-light">
+                <tr>
+                  <th>Sản phẩm</th>
+                  <th>Phân loại</th>
+                  <th>Đơn giá</th>
+                  <th>Số lượng</th>
+                  <th>Thành tiền</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% order.items.forEach(it => { %>
+                  <tr>
+                    <td>
+                      <strong><%= it.product_name %></strong><br>
+                      <small class="text-muted"><code><%= it.sku %></code></small>
+                    </td>
+                    <td>Size <%= it.size %>, Màu <%= it.color %></td>
+                    <td><%= it.unit_price.toLocaleString('vi-VN') %> đ</td>
+                    <td><%= it.quantity %></td>
+                    <td class="font-weight-bold text-primary"><%= it.line_total.toLocaleString('vi-VN') %> đ</td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4 mb-4">
+      <div class="card shadow-sm border-0 bg-white">
+        <div class="card-header bg-white border-bottom">
+          <h5 class="mb-0 font-weight-semi-bold">Chuyển trạng thái đơn</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>Khách hàng:</strong> <%= order.recipient_name %></p>
+          <p><strong>Điện thoại:</strong> <%= order.phone %></p>
+          <p><strong>Địa chỉ:</strong> <%= order.address %></p>
+          <p><strong>Tổng tiền:</strong> <span class="h6 font-weight-bold text-primary"><%= order.total_amount.toLocaleString('vi-VN') %> đ</span></p>
+          <p>
+            <strong>Trạng thái hiện tại:</strong>
+            <% if (order.status === 'pending') { %>
+              <span class="badge badge-warning px-2 py-1">pending (Chờ xử lý)</span>
+            <% } else if (order.status === 'confirmed') { %>
+              <span class="badge badge-info px-2 py-1">confirmed (Đã xác nhận)</span>
+            <% } else if (order.status === 'shipping') { %>
+              <span class="badge badge-primary px-2 py-1">shipping (Đang giao)</span>
+            <% } else if (order.status === 'completed') { %>
+              <span class="badge badge-success px-2 py-1">completed (Hoàn thành)</span>
+            <% } else if (order.status === 'cancelled') { %>
+              <span class="badge badge-danger px-2 py-1">cancelled (Đã hủy)</span>
+            <% } %>
+          </p>
+
+          <form action="/admin/orders/<%= order.id %>/status" method="POST" class="mt-3">
+            <input type="hidden" name="_method" value="PATCH">
+            <div class="form-group">
+              <label for="status" class="font-weight-bold">Chọn trạng thái kế tiếp:</label>
+              <select name="status" id="status" class="form-control">
+                <% if (order.status === 'pending') { %>
+                  <option value="confirmed">Xác nhận đơn (confirmed)</option>
+                  <option value="cancelled">Hủy đơn & hoàn kho (cancelled)</option>
+                <% } else if (order.status === 'confirmed') { %>
+                  <option value="shipping">Giao hàng (shipping)</option>
+                  <option value="cancelled">Hủy đơn & hoàn kho (cancelled)</option>
+                <% } else if (order.status === 'shipping') { %>
+                  <option value="completed">Hoàn thành giao nhận (completed)</option>
+                <% } else { %>
+                  <option disabled selected>Đơn đã ở trạng thái cuối (<%= order.status %>)</option>
+                <% } %>
+              </select>
+            </div>
+            <% if (['pending', 'confirmed', 'shipping'].includes(order.status)) { %>
+              <button type="submit" class="btn btn-primary btn-block">Cập nhật trạng thái</button>
+            <% } else { %>
+              <button type="button" class="btn btn-secondary btn-block" disabled>Không thể chuyển trạng thái</button>
+            <% } %>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contract Data Table -->
+  <div class="card mt-2 mb-4 bg-light">
+    <div class="card-header font-weight-bold">
+      Dữ liệu mảng hợp đồng (Admin Order Items Rows):
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm mb-0">
+          <thead>
+            <tr><th>product_name</th><th>size</th><th>color</th><th>quantity</th><th>unit_price</th></tr>
+          </thead>
+          <tbody>
+            <% order.items.forEach(x => { %>
+              <tr>
+                <td><%= x.product_name %></td>
+                <td><%= x.size %></td>
+                <td><%= x.color %></td>
+                <td><%= x.quantity %></td>
+                <td><%= x.unit_price %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

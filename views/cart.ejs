@@ -1,0 +1,144 @@
+<%- include('partials/header') %>
+
+<div class="container-fluid bg-secondary mb-4">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height:180px">
+    <h1 class="font-weight-semi-bold text-uppercase mb-2">Giỏ hàng</h1>
+    <div class="d-inline-flex">
+      <a href="/" class="text-dark font-weight-medium">Trang chủ</a>
+      <span class="px-2 text-dark">-</span>
+      <span class="text-primary font-weight-bold">Giỏ hàng</span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid pt-2 px-xl-5">
+  <!-- Foundation Info Notice -->
+  <div class="foundation">
+    Tiêu đề: <strong>CN04 — Giỏ mẫu của bạn</strong> | Người phụ trách: <strong>Nhựt</strong>.
+    Bạn có thể thêm/bớt số lượng sản phẩm, xóa sản phẩm khỏi giỏ và tiến hành thanh toán.
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8 table-responsive mb-5">
+      <% if (items && items.length > 0) { %>
+        <table class="table table-bordered text-center mb-0 bg-white">
+          <thead class="bg-secondary text-dark">
+            <tr>
+              <th>Sản phẩm / Biến thể</th>
+              <th>Đơn giá</th>
+              <th>Số lượng</th>
+              <th>Thành tiền</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody class="align-middle">
+            <% items.forEach(item => { %>
+              <% const lineTotal = (item.variant ? item.variant.price : 0) * item.quantity; %>
+              <tr>
+                <td class="align-middle text-left">
+                  <strong><%= item.variant && item.variant.product ? item.variant.product.name : 'Sản phẩm' %></strong><br>
+                  <small class="text-muted">
+                    SKU: <code><%= item.variant ? item.variant.sku : item.sku %></code> | 
+                    Size <%= item.variant ? item.variant.size : '' %> | 
+                    Màu <%= item.variant ? item.variant.color : '' %>
+                  </small>
+                </td>
+                <td class="align-middle">
+                  <%= (item.variant ? item.variant.price : 0).toLocaleString('vi-VN') %> đ
+                </td>
+                <td class="align-middle" style="width: 170px;">
+                  <form action="/cart/<%= item.id %>" method="POST" class="d-inline-flex align-items-center">
+                    <input type="hidden" name="_method" value="PATCH">
+                    <input type="number" name="quantity" class="form-control form-control-sm text-center mr-1" value="<%= item.quantity %>" min="1" max="99" style="width: 70px;">
+                    <button type="submit" class="btn btn-sm btn-outline-primary" title="Cập nhật số lượng">
+                      <i class="fa fa-sync-alt"></i>
+                    </button>
+                  </form>
+                </td>
+                <td class="align-middle font-weight-bold text-primary">
+                  <%= lineTotal.toLocaleString('vi-VN') %> đ
+                </td>
+                <td class="align-middle">
+                  <form action="/cart/<%= item.id %>" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-sm btn-danger">
+                      <i class="fa fa-times"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <div class="card p-5 text-center bg-white border">
+          <i class="fa fa-shopping-cart fa-3x text-muted mb-3"></i>
+          <h5>Giỏ hàng của bạn đang trống!</h5>
+          <p class="text-muted">Hãy chọn những bộ trang phục thời thượng từ cửa hàng của chúng tôi.</p>
+          <div>
+            <a href="/shop" class="btn btn-primary px-4">Tiếp tục mua sắm</a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card border-secondary mb-5 shadow-sm">
+        <div class="card-header bg-secondary border-0">
+          <h4 class="font-weight-semi-bold m-0">Tóm tắt giỏ hàng</h4>
+        </div>
+        <div class="card-body">
+          <div class="d-flex justify-content-between mb-3 pt-1">
+            <h6 class="font-weight-medium">Tạm tính</h6>
+            <h6 class="font-weight-medium"><%= total.toLocaleString('vi-VN') %> đ</h6>
+          </div>
+          <div class="d-flex justify-content-between">
+            <h6 class="font-weight-medium">Phí vận chuyển</h6>
+            <h6 class="font-weight-medium text-success">0 đ (Miễn phí)</h6>
+          </div>
+        </div>
+        <div class="card-footer border-secondary bg-transparent">
+          <div class="d-flex justify-content-between mt-2">
+            <h5 class="font-weight-bold">Tổng thanh toán</h5>
+            <h5 class="font-weight-bold text-primary"><%= total.toLocaleString('vi-VN') %> đ</h5>
+          </div>
+          <% if (items && items.length > 0) { %>
+            <a href="/checkout" class="btn btn-block btn-primary my-3 py-3 font-weight-bold">
+              Tiến hành thanh toán
+            </a>
+          <% } else { %>
+            <button class="btn btn-block btn-secondary my-3 py-3" disabled>Tiến hành thanh toán</button>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contract Data Table for Testing Verification -->
+  <div class="card mt-2 mb-4 bg-light">
+    <div class="card-header font-weight-bold">
+      Dữ liệu mảng hợp đồng (CN04 Rows):
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm mb-0">
+          <thead>
+            <tr><th>id</th><th>sku</th><th>quantity</th><th>price</th></tr>
+          </thead>
+          <tbody>
+            <% items.forEach(x => { %>
+              <tr>
+                <td><%= x.id %></td>
+                <td><code><%= x.variant ? x.variant.sku : x.sku %></code></td>
+                <td><%= x.quantity %></td>
+                <td><%= x.variant ? x.variant.price : x.price %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

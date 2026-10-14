@@ -1,0 +1,149 @@
+<%- include('partials/header') %>
+
+<div class="container-fluid bg-secondary mb-4">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height:180px">
+    <h1 class="font-weight-semi-bold text-uppercase mb-2">Thanh toán</h1>
+    <div class="d-inline-flex">
+      <a href="/" class="text-dark font-weight-medium">Trang chủ</a>
+      <span class="px-2 text-dark">-</span>
+      <a href="/cart" class="text-dark font-weight-medium">Giỏ hàng</a>
+      <span class="px-2 text-dark">-</span>
+      <span class="text-primary font-weight-bold">Thanh toán</span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid pt-2 px-xl-5">
+  <div class="foundation">
+    Tiêu đề: <strong>CN05 — Nền checkout, cần làm form</strong> | Người phụ trách: <strong>Anh Tú</strong>.
+    Vui lòng điền thông tin người nhận hàng để hoàn tất đơn đặt hàng (Phương thức thanh toán COD).
+  </div>
+
+  <% if (items && items.length > 0) { %>
+    <form action="/checkout" method="POST">
+      <input type="hidden" name="checkout_token" value="<%= checkoutToken %>">
+
+      <div class="row">
+        <!-- Billing / Shipping Form -->
+        <div class="col-lg-7 mb-5">
+          <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+              <h5 class="mb-0"><i class="fa fa-map-marker-alt mr-2"></i>Thông tin nhận hàng</h5>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="recipient_name" class="font-weight-bold">Họ và tên người nhận <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="recipient_name" name="recipient_name" value="<%= user.name %>" required placeholder="Ví dụ: Nguyễn Văn A">
+              </div>
+
+              <div class="form-group">
+                <label for="phone" class="font-weight-bold">Số điện thoại <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="phone" name="phone" value="0900000000" required placeholder="Ví dụ: 0901234567">
+              </div>
+
+              <div class="form-group">
+                <label for="address" class="font-weight-bold">Địa chỉ giao hàng chi tiết <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="address" name="address" rows="3" required placeholder="Số nhà, tên đường, phường/xã, quận/huyện...">Địa chỉ demo, không phải thông tin thật</textarea>
+              </div>
+
+              <div class="form-group mb-0">
+                <label class="font-weight-bold">Phương thức thanh toán</label>
+                <div class="custom-control custom-radio">
+                  <input type="radio" class="custom-control-input" id="cod" name="payment_method" value="cod" checked>
+                  <label class="custom-control-label font-weight-medium" for="cod">
+                    <i class="fa fa-truck mr-1 text-primary"></i> Thanh toán khi nhận hàng (COD)
+                  </label>
+                  <small class="form-text text-muted">Cửa hàng áp dụng phí vận chuyển 0 VND (Miễn phí toàn quốc).</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-5 mb-5">
+          <div class="card shadow-sm border-secondary">
+            <div class="card-header bg-secondary border-0">
+              <h5 class="font-weight-semi-bold m-0"><i class="fa fa-receipt mr-2"></i>Đơn hàng của bạn</h5>
+            </div>
+            <div class="card-body">
+              <div class="d-flex justify-content-between font-weight-bold border-bottom pb-2 mb-3">
+                <span>Sản phẩm</span>
+                <span>Thành tiền</span>
+              </div>
+
+              <% items.forEach(it => { %>
+                <div class="d-flex justify-content-between mb-2">
+                  <span>
+                    <%= it.variant && it.variant.product ? it.variant.product.name : 'Sản phẩm' %> 
+                    <small class="text-muted">(x<%= it.quantity %>)</small><br>
+                    <small class="text-muted"><code><%= it.variant ? it.variant.sku : '' %></code></small>
+                  </span>
+                  <span class="font-weight-medium">
+                    <%= ((it.variant ? it.variant.price : 0) * it.quantity).toLocaleString('vi-VN') %> đ
+                  </span>
+                </div>
+              <% }); %>
+
+              <div class="border-top pt-3 mt-3">
+                <div class="d-flex justify-content-between mb-2">
+                  <h6>Tạm tính</h6>
+                  <h6><%= total.toLocaleString('vi-VN') %> đ</h6>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                  <h6>Phí vận chuyển</h6>
+                  <h6 class="text-success">0 đ</h6>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer border-secondary bg-transparent">
+              <div class="d-flex justify-content-between mt-2">
+                <h5 class="font-weight-bold">Tổng thanh toán</h5>
+                <h5 class="font-weight-bold text-primary"><%= total.toLocaleString('vi-VN') %> đ</h5>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block my-3 py-3 font-weight-bold">
+                Xác nhận đặt hàng
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  <% } else { %>
+    <div class="card p-5 text-center bg-white border mb-5">
+      <i class="fa fa-shopping-basket fa-3x text-muted mb-3"></i>
+      <h5>Không có sản phẩm nào trong giỏ hàng để thanh toán.</h5>
+      <p class="text-muted">Vui lòng thêm sản phẩm vào giỏ hàng trước khi đặt hàng.</p>
+      <div>
+        <a href="/shop" class="btn btn-primary">Mua sắm ngay</a>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- Contract Data Table for CN05 Verification -->
+  <div class="card mt-2 mb-4 bg-light">
+    <div class="card-header font-weight-bold">
+      Dữ liệu mảng hợp đồng (CN05 Rows):
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm mb-0">
+          <thead>
+            <tr><th>id</th><th>variant_id</th><th>quantity</th></tr>
+          </thead>
+          <tbody>
+            <% items.forEach(x => { %>
+              <tr>
+                <td><%= x.id %></td>
+                <td><%= x.variant_id %></td>
+                <td><%= x.quantity %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

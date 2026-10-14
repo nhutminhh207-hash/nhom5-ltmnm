@@ -1,0 +1,2 @@
+# Local MySQL data; existing tracked files require separate cleanup.
+/mysql-8.4/

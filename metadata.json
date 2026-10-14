@@ -1,0 +1,7 @@
+{
+  "name": "EShopper - Fashion Shop",
+  "description": "Cửa hàng thời trang EShopper trực tuyến với các danh mục áo thun, áo sơ mi, quần và quản lý đơn hàng.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

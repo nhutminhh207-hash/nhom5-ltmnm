@@ -1,0 +1,100 @@
+<%- include('../../partials/header') %>
+
+<div class="container-fluid bg-secondary mb-4">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height:160px">
+    <h1 class="font-weight-semi-bold text-uppercase mb-2">Quản lý Danh mục (CN01)</h1>
+    <div class="d-inline-flex">
+      <a href="/admin" class="text-dark font-weight-medium">Quản trị</a>
+      <span class="px-2 text-dark">-</span>
+      <span class="text-primary font-weight-bold">Danh mục</span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid pt-2 px-xl-5">
+  <div class="foundation">
+    Module <strong>CN01 — Danh mục</strong> | Thành viên phụ trách: <strong>Châu</strong>.
+    Chức năng CRUD (Tạo, Xem, Sửa, Xóa) danh mục sản phẩm của hệ thống với validation đầy đủ.
+  </div>
+
+  <div class="card shadow-sm border-0 mb-4 bg-white">
+    <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+      <h5 class="mb-0 font-weight-bold text-dark">
+        <i class="fa fa-folder mr-2 text-primary"></i>Danh sách danh mục (<%= categories.length %>)
+      </h5>
+      <a href="/admin/categories/create" class="btn btn-primary btn-sm px-3 font-weight-bold">
+        <i class="fa fa-plus mr-1"></i> Thêm danh mục mới
+      </a>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover table-bordered mb-0">
+          <thead class="thead-light">
+            <tr>
+              <th style="width: 70px;">ID</th>
+              <th>Tên danh mục</th>
+              <th>Đường dẫn (Slug)</th>
+              <th>Mô tả</th>
+              <th style="width: 130px;" class="text-center">Số sản phẩm</th>
+              <th style="width: 170px;" class="text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% categories.forEach(cat => { %>
+              <% const prodCount = (productsCountMap && productsCountMap[cat.id]) || 0; %>
+              <tr>
+                <td class="font-weight-bold"><%= cat.id %></td>
+                <td>
+                  <strong class="text-dark"><%= cat.name %></strong>
+                </td>
+                <td><code><%= cat.slug %></code></td>
+                <td><small class="text-muted"><%= cat.description || 'Chưa có mô tả' %></small></td>
+                <td class="text-center">
+                  <span class="badge badge-pill badge-info px-2 py-1"><%= prodCount %> sản phẩm</span>
+                </td>
+                <td class="text-center">
+                  <a href="/admin/categories/<%= cat.id %>/edit" class="btn btn-sm btn-outline-primary mr-1" title="Chỉnh sửa">
+                    <i class="fa fa-edit mr-1"></i>Sửa
+                  </a>
+                  <form action="/admin/categories/<%= cat.id %>" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa danh mục">
+                      <i class="fa fa-trash-alt mr-1"></i>Xóa
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contract Data Table (CN01 Rows) -->
+  <div class="card mt-2 mb-4 bg-light">
+    <div class="card-header font-weight-bold">
+      Dữ liệu mảng hợp đồng (CN01 Rows — Châu):
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm mb-0">
+          <thead>
+            <tr><th>id</th><th>name</th><th>slug</th></tr>
+          </thead>
+          <tbody>
+            <% categories.forEach(c => { %>
+              <tr>
+                <td><%= c.id %></td>
+                <td><%= c.name %></td>
+                <td><code><%= c.slug %></code></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../../partials/footer') %>

@@ -1,0 +1,206 @@
+<%- include('../../partials/header') %>
+
+<div class="container-fluid bg-secondary mb-4">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height:160px">
+    <h1 class="font-weight-semi-bold text-uppercase mb-2">Chỉnh sửa Sản phẩm & Biến thể</h1>
+    <div class="d-inline-flex">
+      <a href="/admin" class="text-dark font-weight-medium">Quản trị</a>
+      <span class="px-2 text-dark">-</span>
+      <a href="/admin/products" class="text-dark font-weight-medium">Sản phẩm</a>
+      <span class="px-2 text-dark">-</span>
+      <span class="text-primary font-weight-bold">Sửa #<%= product.id %></span>
+    </div>
+  </div>
+</div>
+
+<div class="container py-3">
+  <form method="POST" action="/admin/products/<%= product.id %>">
+    <input type="hidden" name="_method" value="PATCH">
+
+    <div class="row">
+      <!-- General Info -->
+      <div class="col-lg-7 mb-4">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white border-bottom py-3">
+            <h5 class="mb-0 font-weight-bold text-dark">
+              <i class="fa fa-info-circle mr-2 text-primary"></i>Thông tin sản phẩm: <%= product.name %> (CN02)
+            </h5>
+          </div>
+          <div class="card-body p-4">
+            <div class="form-group">
+              <label for="name" class="font-weight-bold">Tên sản phẩm <span class="text-danger">*</span></label>
+              <input type="text" class="form-control" id="name" name="name" value="<%= product.name %>" required>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 form-group">
+                <label for="slug" class="font-weight-bold">Đường dẫn (Slug) <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="slug" name="slug" value="<%= product.slug %>" required>
+              </div>
+
+              <div class="col-md-6 form-group">
+                <label for="category_id" class="font-weight-bold">Danh mục <span class="text-danger">*</span></label>
+                <select class="form-control" id="category_id" name="category_id" required>
+                  <% categories.forEach(c => { %>
+                    <option value="<%= c.id %>" <%= product.category_id === c.id ? 'selected' : '' %>><%= c.name %></option>
+                  <% }); %>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="description" class="font-weight-bold">Mô tả sản phẩm</label>
+              <textarea class="form-control" id="description" name="description" rows="4"><%= product.description || '' %></textarea>
+            </div>
+
+            <div class="form-group mb-0">
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="is_active" name="is_active" value="1" <%= product.is_active ? 'checked' : '' %>>
+                <label class="custom-control-label font-weight-medium" for="is_active">Kích hoạt hiển thị sản phẩm trên cửa hàng</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Picker & Preview -->
+      <div class="col-lg-5 mb-4">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white border-bottom py-3">
+            <h5 class="mb-0 font-weight-bold text-dark">
+              <i class="fa fa-image mr-2 text-primary"></i>Hình ảnh sản phẩm
+            </h5>
+          </div>
+          <div class="card-body p-4 text-center">
+            <div class="mb-3">
+              <img id="previewImg" src="/template/eshopper/img/product-<%= product.image_index %>.jpg" alt="Xem trước" class="img-fluid border p-2 bg-light rounded" style="max-height: 220px; object-fit: cover;">
+            </div>
+            <label class="font-weight-bold d-block text-left mb-2">Thay đổi hình ảnh minh họa:</label>
+            <div class="d-flex flex-wrap justify-content-center gap-2 mb-3">
+              <% for(let i = 1; i <= 8; i++) { %>
+                <div class="custom-control custom-radio d-inline-block mx-1 mb-2">
+                  <input type="radio" id="img-<%= i %>" name="image_index" value="<%= i %>" class="custom-control-input" <%= product.image_index === i ? 'checked' : '' %> onchange="updatePreview('<%= i %>')">
+                  <label class="custom-control-label" for="img-<%= i %>">
+                    <img src="/template/eshopper/img/product-<%= i %>.jpg" class="border rounded" style="width: 42px; height: 42px; object-fit: cover;">
+                  </label>
+                </div>
+              <% } %>
+            </div>
+            <small class="text-muted d-block text-left">Đường dẫn: <code>products/demo.jpg</code></small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variants Table -->
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+        <h5 class="mb-0 font-weight-bold text-dark">
+          <i class="fa fa-boxes mr-2 text-primary"></i>Quản lý biến thể (Size, Màu sắc, Giá, Kho)
+        </h5>
+        <button type="button" class="btn btn-sm btn-outline-primary" onclick="addVariantRow()">
+          <i class="fa fa-plus mr-1"></i> Thêm biến thể mới
+        </button>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-bordered mb-0" id="variantsTable">
+            <thead class="thead-light">
+              <tr>
+                <th style="width: 25%;">Mã SKU <span class="text-danger">*</span></th>
+                <th style="width: 18%;">Kích thước (Size)</th>
+                <th style="width: 18%;">Màu sắc</th>
+                <th style="width: 20%;">Đơn giá (VND) <span class="text-danger">*</span></th>
+                <th style="width: 14%;">Số lượng kho</th>
+                <th style="width: 5%;">Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% product.variants.forEach((v, idx) => { %>
+                <tr>
+                  <td>
+                    <input type="hidden" name="variants[<%= idx %>][id]" value="<%= v.id %>">
+                    <input type="text" name="variants[<%= idx %>][sku]" class="form-control form-control-sm" value="<%= v.sku %>" required>
+                  </td>
+                  <td>
+                    <select name="variants[<%= idx %>][size]" class="form-control form-control-sm">
+                      <option value="S" <%= v.size === 'S' ? 'selected' : '' %>>S</option>
+                      <option value="M" <%= v.size === 'M' ? 'selected' : '' %>>M</option>
+                      <option value="L" <%= v.size === 'L' ? 'selected' : '' %>>L</option>
+                      <option value="XL" <%= v.size === 'XL' ? 'selected' : '' %>>XL</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select name="variants[<%= idx %>][color]" class="form-control form-control-sm">
+                      <option value="Đen" <%= v.color === 'Đen' ? 'selected' : '' %>>Đen</option>
+                      <option value="Trắng" <%= v.color === 'Trắng' ? 'selected' : '' %>>Trắng</option>
+                      <option value="Xanh" <%= v.color === 'Xanh' ? 'selected' : '' %>>Xanh</option>
+                      <option value="Đỏ" <%= v.color === 'Đỏ' ? 'selected' : '' %>>Đỏ</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="number" name="variants[<%= idx %>][price]" class="form-control form-control-sm" value="<%= v.price %>" min="1000" step="1000" required>
+                  </td>
+                  <td>
+                    <input type="number" name="variants[<%= idx %>][stock]" class="form-control form-control-sm" value="<%= v.stock %>" min="0" required>
+                  </td>
+                  <td class="text-center">
+                    <span class="badge <%= v.stock > 0 ? 'badge-success' : 'badge-danger' %>"><%= v.stock %></span>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between pb-5">
+      <a href="/admin/products" class="btn btn-secondary px-4">
+        <i class="fa fa-arrow-left mr-1"></i> Quay lại
+      </a>
+      <button type="submit" class="btn btn-primary px-4 font-weight-bold">
+        <i class="fa fa-save mr-1"></i> Cập nhật sản phẩm & biến thể
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+let nextIdx = <%= product.variants.length %>;
+
+function updatePreview(index) {
+  document.getElementById('previewImg').src = `/template/eshopper/img/product-${index}.jpg`;
+}
+
+function addVariantRow() {
+  const tbody = document.querySelector('#variantsTable tbody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><input type="text" name="variants[${nextIdx}][sku]" class="form-control form-control-sm" value="SP-NEW-${nextIdx + 1}" required></td>
+    <td>
+      <select name="variants[${nextIdx}][size]" class="form-control form-control-sm">
+        <option value="S">S</option>
+        <option value="M" selected>M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
+    </td>
+    <td>
+      <select name="variants[${nextIdx}][color]" class="form-control form-control-sm">
+        <option value="Đen" selected>Đen</option>
+        <option value="Trắng">Trắng</option>
+        <option value="Xanh">Xanh</option>
+        <option value="Đỏ">Đỏ</option>
+      </select>
+    </td>
+    <td><input type="number" name="variants[${nextIdx}][price]" class="form-control form-control-sm" value="160000" min="1000" step="1000" required></td>
+    <td><input type="number" name="variants[${nextIdx}][stock]" class="form-control form-control-sm" value="15" min="0" required></td>
+    <td class="text-center"><button type="button" class="btn btn-sm btn-light text-danger" onclick="this.closest('tr').remove()"><i class="fa fa-times"></i></button></td>
+  `;
+  tbody.appendChild(tr);
+  nextIdx++;
+}
+</script>
+
+<%- include('../../partials/footer') %>

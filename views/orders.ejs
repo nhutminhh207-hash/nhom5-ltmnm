@@ -1,0 +1,117 @@
+<%- include('partials/header') %>
+
+<div class="container-fluid bg-secondary mb-4">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height:180px">
+    <h1 class="font-weight-semi-bold text-uppercase mb-2">Đơn hàng của tôi</h1>
+    <div class="d-inline-flex">
+      <a href="/" class="text-dark font-weight-medium">Trang chủ</a>
+      <span class="px-2 text-dark">-</span>
+      <span class="text-primary font-weight-bold">Lịch sử đơn hàng</span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid pt-2 px-xl-5">
+  <div class="foundation">
+    Tiêu đề: <strong>CN06 — Đơn cá nhân mẫu</strong> | Người phụ trách: <strong>Kiều</strong>.
+    Danh sách các đơn hàng của khách hàng <strong><%= user.name %></strong>.
+  </div>
+
+  <div class="card shadow-sm border-0 mb-4 bg-white">
+    <div class="card-header bg-white border-bottom">
+      <h5 class="mb-0 font-weight-semi-bold"><i class="fa fa-list-alt mr-2 text-primary"></i>Danh sách đơn hàng (<%= orders.length %>)</h5>
+    </div>
+    <div class="card-body p-0">
+      <% if (orders && orders.length > 0) { %>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="thead-light">
+              <tr>
+                <th>Mã đơn</th>
+                <th>Ngày tạo</th>
+                <th>Người nhận</th>
+                <th>Trạng thái</th>
+                <th>Tổng tiền</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% orders.forEach(o => { %>
+                <tr>
+                  <td><strong>#<%= o.id %></strong></td>
+                  <td><%= new Date(o.created_at).toLocaleDateString('vi-VN') %></td>
+                  <td><%= o.recipient_name %></td>
+                  <td>
+                    <% if (o.status === 'pending') { %>
+                      <span class="badge badge-warning">Chờ xử lý</span>
+                    <% } else if (o.status === 'confirmed') { %>
+                      <span class="badge badge-info">Đã xác nhận</span>
+                    <% } else if (o.status === 'shipping') { %>
+                      <span class="badge badge-primary">Đang giao hàng</span>
+                    <% } else if (o.status === 'completed') { %>
+                      <span class="badge badge-success">Đã hoàn thành</span>
+                    <% } else if (o.status === 'cancelled') { %>
+                      <span class="badge badge-danger">Đã hủy</span>
+                    <% } else { %>
+                      <span class="badge badge-secondary"><%= o.status %></span>
+                    <% } %>
+                  </td>
+                  <td class="font-weight-bold text-primary">
+                    <%= o.total_amount.toLocaleString('vi-VN') %> đ
+                  </td>
+                  <td>
+                    <a href="/orders/<%= o.id %>" class="btn btn-sm btn-outline-primary mr-1">
+                      <i class="fa fa-eye mr-1"></i>Chi tiết
+                    </a>
+                    <% if (o.status === 'pending') { %>
+                      <form action="/orders/<%= o.id %>/cancel" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này không?');">
+                        <input type="hidden" name="_method" value="PATCH">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                          <i class="fa fa-times mr-1"></i>Hủy đơn
+                        </button>
+                      </form>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <div class="text-center py-5">
+          <i class="fa fa-receipt fa-3x text-muted mb-3"></i>
+          <h5>Bạn chưa có đơn hàng nào.</h5>
+          <p class="text-muted">Bắt đầu mua sắm để tạo đơn hàng đầu tiên!</p>
+          <a href="/shop" class="btn btn-primary">Mua sắm ngay</a>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Contract Data Table (CN06 rows) -->
+  <div class="card mt-2 mb-4 bg-light">
+    <div class="card-header font-weight-bold">
+      Dữ liệu mảng hợp đồng (CN06 Rows):
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm mb-0">
+          <thead>
+            <tr><th>id</th><th>status</th><th>total_amount</th></tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(o => { %>
+              <tr>
+                <td><%= o.id %></td>
+                <td><%= o.status %></td>
+                <td><%= o.total_amount %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

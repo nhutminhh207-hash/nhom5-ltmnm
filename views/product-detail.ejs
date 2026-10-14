@@ -1,0 +1,268 @@
+<%- include('partials/header') %>
+
+<div class="container-fluid bg-secondary mb-4">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height:180px">
+    <h1 class="font-weight-semi-bold text-uppercase mb-2"><%= product.name %></h1>
+    <div class="d-inline-flex">
+      <a href="/" class="text-dark font-weight-medium">Trang chủ</a>
+      <span class="px-2 text-dark">-</span>
+      <a href="/shop" class="text-dark font-weight-medium">Sản phẩm</a>
+      <span class="px-2 text-dark">-</span>
+      <span class="text-primary font-weight-bold"><%= product.name %></span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid py-3 px-xl-5">
+  <div class="row">
+    <div class="col-lg-5 pb-5">
+      <div class="border p-2 bg-white shadow-sm text-center">
+        <img class="img-fluid w-100" src="/template/eshopper/img/product-<%= product.image_index %>.jpg" alt="<%= product.name %>" style="max-height:480px; object-fit:cover;">
+      </div>
+    </div>
+
+    <div class="col-lg-7 pb-5">
+      <h3 class="font-weight-semi-bold"><%= product.name %></h3>
+      <p class="text-muted mb-2">
+        Danh mục: <strong><%= product.category ? product.category.name : 'Thời trang' %></strong> | 
+        Mã sản phẩm: <code><%= product.slug %></code>
+      </p>
+      
+      <div class="d-flex align-items-center mb-3">
+        <h4 class="font-weight-bold text-primary mb-0" id="displayPrice">
+          <% const prices = product.variants.map(v => v.price); %>
+          <% if (prices.length > 0) { %>
+            <%= Math.min(...prices).toLocaleString('vi-VN') %> đ - <%= Math.max(...prices).toLocaleString('vi-VN') %> đ
+          <% } else { %>
+            Liên hệ
+          <% } %>
+        </h4>
+      </div>
+
+      <p class="mb-4"><%= product.description %></p>
+
+      <form action="/cart" method="POST" class="mb-4" id="addToCartForm" onsubmit="handleAddToCartSubmit(event)">
+        <div class="d-flex mb-3">
+          <p class="text-dark font-weight-medium mb-0 mr-3">Chọn biến thể:</p>
+          <div>
+            <% product.variants.forEach((v, idx) => { %>
+              <div class="custom-control custom-radio mb-2">
+                <input type="radio" class="custom-control-input variant-radio" id="variant-<%= v.id %>" name="variant_id" value="<%= v.id %>" data-price="<%= v.price %>" data-stock="<%= v.stock %>" data-sku="<%= v.sku %>" <%= idx === 0 ? 'checked' : '' %> <%= v.stock <= 0 ? 'disabled' : '' %>>
+                <label class="custom-control-label" for="variant-<%= v.id %>">
+                  <strong><%= v.sku %></strong> — Size <%= v.size %> / <%= v.color %> — <%= v.price.toLocaleString('vi-VN') %> đ 
+                  <% if (v.stock > 0) { %>
+                    <span class="badge badge-success ml-1">Còn <%= v.stock %></span>
+                  <% } else { %>
+                    <span class="badge badge-danger ml-1">Hết hàng</span>
+                  <% } %>
+                </label>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center mb-4 pt-2">
+          <div class="input-group quantity mr-3" style="width: 130px;">
+            <div class="input-group-btn">
+              <button type="button" class="btn btn-primary btn-minus" onclick="decreaseQty()">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+            <input type="number" name="quantity" id="quantityInput" class="form-control bg-secondary text-center" value="1" min="1" max="50">
+            <div class="input-group-btn">
+              <button type="button" class="btn btn-primary btn-plus" onclick="increaseQty()">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+          <% if (user && user.role === 'admin') { %>
+            <button type="button" class="btn btn-secondary px-3" disabled title="Admin không thể mua hàng">
+              <i class="fa fa-shopping-cart mr-1"></i> Admin không mua hàng
+            </button>
+          <% } else { %>
+            <button type="submit" class="btn btn-primary px-4 font-weight-bold">
+              <i class="fa fa-shopping-cart mr-1"></i> Thêm vào giỏ hàng (AJAX)
+            </button>
+          <% } %>
+        </div>
+      </form>
+
+      <!-- Foundation Info Panel -->
+      <div class="foundation mt-4">
+        Người phụ trách module: <strong>Nhựt (CN03 / CN04)</strong>. Bảng chi tiết các biến thể sản phẩm:
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm bg-white">
+          <thead class="thead-light">
+            <tr>
+              <th>ID</th>
+              <th>SKU</th>
+              <th>Size</th>
+              <th>Màu</th>
+              <th>Giá</th>
+              <th>Tồn kho</th>
+              <th>Trạng thái</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% product.variants.forEach(v => { %>
+              <tr>
+                <td><%= v.id %></td>
+                <td><code><%= v.sku %></code></td>
+                <td><%= v.size %></td>
+                <td><%= v.color %></td>
+                <td><%= v.price.toLocaleString('vi-VN') %> đ</td>
+                <td>
+                  <span class="badge <%= v.stock > 0 ? 'badge-info' : 'badge-danger' %>"><%= v.stock %></span>
+                </td>
+                <td><%= v.is_active ? 'Kích hoạt' : 'Ẩn' %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Reviews & AJAX Comments Section (Bonus Feature) -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0 bg-white">
+        <div class="card-header bg-white border-bottom py-3">
+          <h5 class="mb-0 font-weight-bold text-dark">
+            <i class="fa fa-comments text-primary mr-2"></i>Đánh giá & Bình luận của Khách hàng (Tích hợp AJAX — Điểm cộng)
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          <div class="row">
+            <!-- Review Form -->
+            <div class="col-md-5 mb-4 border-right">
+              <h6 class="font-weight-bold mb-3">Gửi đánh giá của bạn:</h6>
+              <form id="reviewForm" onsubmit="submitReview(event)">
+                <div class="form-group">
+                  <label for="reviewName" class="small font-weight-bold">Họ và tên:</label>
+                  <input type="text" class="form-control form-control-sm" id="reviewName" value="<%= user ? user.name : '' %>" required placeholder="Nhập tên của bạn">
+                </div>
+                <div class="form-group">
+                  <label for="reviewRating" class="small font-weight-bold">Đánh giá sao:</label>
+                  <select class="form-control form-control-sm" id="reviewRating">
+                    <option value="5">⭐⭐⭐⭐⭐ (5 sao - Tuyệt vời)</option>
+                    <option value="4">⭐⭐⭐⭐ (4 sao - Rất tốt)</option>
+                    <option value="3">⭐⭐⭐ (3 sao - Bình thường)</option>
+                    <option value="2">⭐⭐ (2 sao - Tạm được)</option>
+                    <option value="1">⭐ (1 sao - Kém)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="reviewComment" class="small font-weight-bold">Nội dung nhận xét:</label>
+                  <textarea class="form-control form-control-sm" id="reviewComment" rows="3" required placeholder="Chia sẻ cảm nhận về chất vải, form áo, kích cỡ..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm px-3 font-weight-bold">
+                  <i class="fa fa-paper-plane mr-1"></i> Gửi bình luận (AJAX)
+                </button>
+              </form>
+            </div>
+
+            <!-- Existing Reviews List -->
+            <div class="col-md-7">
+              <h6 class="font-weight-bold mb-3">Nhận xét từ khách hàng (<span id="reviewCount"><%= (reviews || []).length %></span>):</h6>
+              <div id="reviewsList" style="max-height: 300px; overflow-y: auto;">
+                <% if (reviews && reviews.length > 0) { %>
+                  <% reviews.forEach(r => { %>
+                    <div class="border-bottom pb-3 mb-3">
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <strong class="text-dark"><%= r.user_name %></strong>
+                        <span class="text-warning small">
+                          <% for(let s=0; s<r.rating; s++) { %>★<% } %>
+                        </span>
+                      </div>
+                      <p class="small text-muted mb-1"><%= r.comment %></p>
+                      <small class="text-muted"><%= new Date(r.created_at).toLocaleDateString('vi-VN') %></small>
+                    </div>
+                  <% }); %>
+                <% } else { %>
+                  <p class="text-muted small" id="noReviewsNotice">Chưa có bình luận nào cho sản phẩm này. Hãy là người đầu tiên để lại đánh giá!</p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function decreaseQty() {
+  const el = document.getElementById('quantityInput');
+  const val = parseInt(el.value, 10) || 1;
+  if (val > 1) el.value = val - 1;
+}
+function increaseQty() {
+  const el = document.getElementById('quantityInput');
+  const val = parseInt(el.value, 10) || 1;
+  el.value = val + 1;
+}
+
+function handleAddToCartSubmit(e) {
+  e.preventDefault();
+  const selectedVariant = document.querySelector('input[name="variant_id"]:checked');
+  if (!selectedVariant) {
+    showToast('Lỗi', 'Vui lòng chọn một biến thể sản phẩm.', true);
+    return;
+  }
+  const qty = parseInt(document.getElementById('quantityInput').value, 10) || 1;
+  ajaxAddToCart(selectedVariant.value, qty);
+}
+
+function submitReview(e) {
+  e.preventDefault();
+  const userName = document.getElementById('reviewName').value;
+  const rating = document.getElementById('reviewRating').value;
+  const comment = document.getElementById('reviewComment').value;
+
+  fetch('/api/products/<%= product.id %>/reviews', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userName, rating, comment })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success && data.review) {
+      showToast('Thành công', 'Đã đăng bình luận đánh giá thành công!');
+      document.getElementById('reviewComment').value = '';
+      
+      const noReviewsNotice = document.getElementById('noReviewsNotice');
+      if (noReviewsNotice) noReviewsNotice.remove();
+
+      let stars = '';
+      for (let s = 0; s < data.review.rating; s++) stars += '★';
+
+      const newReviewHtml = `
+        <div class="border-bottom pb-3 mb-3 bg-light p-2 rounded">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <strong class="text-dark">${data.review.user_name}</strong>
+            <span class="text-warning small">${stars}</span>
+          </div>
+          <p class="small text-muted mb-1">${data.review.comment}</p>
+          <small class="text-muted">${new Date(data.review.created_at).toLocaleDateString('vi-VN')}</small>
+        </div>
+      `;
+      const reviewsList = document.getElementById('reviewsList');
+      reviewsList.insertAdjacentHTML('afterbegin', newReviewHtml);
+
+      const countEl = document.getElementById('reviewCount');
+      if (countEl) countEl.textContent = parseInt(countEl.textContent, 10) + 1;
+    } else {
+      showToast('Lỗi', data.error || 'Không thể đăng bình luận.', true);
+    }
+  })
+  .catch(err => {
+    console.error('Review error:', err);
+    showToast('Lỗi', 'Không thể kết nối máy chủ.', true);
+  });
+}
+</script>
+
+<%- include('partials/footer') %>

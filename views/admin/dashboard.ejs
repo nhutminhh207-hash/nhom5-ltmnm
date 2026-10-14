@@ -1,0 +1,173 @@
+<%- include('../partials/header') %>
+
+<div class="container-fluid bg-secondary mb-4">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height:160px">
+    <h1 class="font-weight-semi-bold text-uppercase mb-2">Bảng điều khiển Quản trị</h1>
+    <div class="d-inline-flex">
+      <a href="/" class="text-dark font-weight-medium">Trang chủ</a>
+      <span class="px-2 text-dark">-</span>
+      <span class="text-primary font-weight-bold">Quản trị viên (Kiều)</span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid pt-2 px-xl-5">
+  <div class="foundation">
+    Màn hình <strong>Quản trị — Kiều (Tích hợp & Phân quyền)</strong>.
+    Hệ thống phân quyền Laravel RBAC bảo vệ an toàn toàn bộ khu vực admin (Middleware <code>role:admin</code>).
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-3">
+      <div class="card border-0 shadow-sm bg-white p-3 border-left-primary">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="text-muted small text-uppercase font-weight-bold">Tổng sản phẩm</div>
+            <div class="h3 font-weight-bold mb-0 text-dark"><%= stats.totalProducts %></div>
+            <small class="text-success"><i class="fa fa-boxes mr-1"></i><%= stats.totalVariants %> biến thể</small>
+          </div>
+          <div class="p-3 bg-light rounded text-primary">
+            <i class="fa fa-tshirt fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+      <div class="card border-0 shadow-sm bg-white p-3 border-left-success">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="text-muted small text-uppercase font-weight-bold">Danh mục (CN01)</div>
+            <div class="h3 font-weight-bold mb-0 text-dark"><%= stats.totalCategories %></div>
+            <small class="text-muted"><i class="fa fa-folder mr-1"></i>Châu phụ trách</small>
+          </div>
+          <div class="p-3 bg-light rounded text-success">
+            <i class="fa fa-folder-open fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+      <div class="card border-0 shadow-sm bg-white p-3 border-left-warning">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="text-muted small text-uppercase font-weight-bold">Tổng đơn hàng (CN06)</div>
+            <div class="h3 font-weight-bold mb-0 text-dark"><%= stats.totalOrders %></div>
+            <small class="text-warning font-weight-bold"><i class="fa fa-clock mr-1"></i><%= stats.pendingOrders %> đơn chờ duyệt</small>
+          </div>
+          <div class="p-3 bg-light rounded text-warning">
+            <i class="fa fa-receipt fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6 mb-3">
+      <div class="card border-0 shadow-sm bg-white p-3 border-left-info">
+        <div class="d-flex align-items-center justify-content-between">
+          <div>
+            <div class="text-muted small text-uppercase font-weight-bold">Doanh thu hệ thống</div>
+            <div class="h4 font-weight-bold mb-0 text-primary"><%= stats.totalRevenue.toLocaleString('vi-VN') %> đ</div>
+            <small class="text-muted"><i class="fa fa-check mr-1"></i>Thanh toán COD</small>
+          </div>
+          <div class="p-3 bg-light rounded text-info">
+            <i class="fa fa-money-bill-wave fa-2x"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Action Modules -->
+  <div class="row mb-4">
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <h5 class="font-weight-bold text-dark"><i class="fa fa-folder text-primary mr-2"></i>CN01 — Danh mục</h5>
+          <p class="text-muted small">Quản lý tạo, sửa, xóa danh mục quần áo thời trang, quản lý slug thân thiện SEO.</p>
+          <a href="/admin/categories" class="btn btn-outline-primary btn-sm font-weight-bold mr-2">Danh sách</a>
+          <a href="/admin/categories/create" class="btn btn-primary btn-sm font-weight-bold">+ Thêm mới</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <h5 class="font-weight-bold text-dark"><i class="fa fa-tshirt text-primary mr-2"></i>CN02 — Sản phẩm</h5>
+          <p class="text-muted small">Quản lý catalog sản phẩm, biến thể đa dạng theo size (S/M/L/XL) và màu sắc, giá bán, tồn kho.</p>
+          <a href="/admin/products" class="btn btn-outline-primary btn-sm font-weight-bold mr-2">Danh sách</a>
+          <a href="/admin/products/create" class="btn btn-primary btn-sm font-weight-bold">+ Thêm mới</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <h5 class="font-weight-bold text-dark"><i class="fa fa-shipping-fast text-primary mr-2"></i>CN06 — Đơn hàng</h5>
+          <p class="text-muted small">Xem danh sách đơn đặt hàng từ khách, chuyển trạng thái đơn (pending &rarr; confirmed &rarr; shipping &rarr; completed/cancelled).</p>
+          <a href="/admin/orders" class="btn btn-primary btn-sm font-weight-bold">Quản lý đơn hàng</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Orders Table -->
+  <div class="card shadow-sm border-0 mb-4 bg-white">
+    <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
+      <h5 class="mb-0 font-weight-bold text-dark">
+        <i class="fa fa-clock mr-2 text-primary"></i>Đơn hàng mới nhất trong hệ thống
+      </h5>
+      <a href="/admin/orders" class="btn btn-outline-primary btn-sm">Xem tất cả</a>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="thead-light">
+            <tr>
+              <th>Mã đơn</th>
+              <th>Khách hàng</th>
+              <th>Số điện thoại</th>
+              <th>Tổng tiền</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% (orders || []).slice(0, 5).forEach(o => { %>
+              <tr>
+                <td><strong>#<%= o.id %></strong></td>
+                <td><%= o.recipient_name %></td>
+                <td><%= o.phone %></td>
+                <td class="font-weight-bold text-primary"><%= o.total_amount.toLocaleString('vi-VN') %> đ</td>
+                <td>
+                  <% if (o.status === 'pending') { %>
+                    <span class="badge badge-warning">pending</span>
+                  <% } else if (o.status === 'confirmed') { %>
+                    <span class="badge badge-info">confirmed</span>
+                  <% } else if (o.status === 'shipping') { %>
+                    <span class="badge badge-primary">shipping</span>
+                  <% } else if (o.status === 'completed') { %>
+                    <span class="badge badge-success">completed</span>
+                  <% } else { %>
+                    <span class="badge badge-danger"><%= o.status %></span>
+                  <% } %>
+                </td>
+                <td>
+                  <a href="/admin/orders/<%= o.id %>" class="btn btn-xs btn-outline-primary">
+                    Xử lý đơn
+                  </a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,169 @@
+<%- include('partials/header') %>
+
+<div class="container-fluid bg-secondary mb-4">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height:180px">
+    <h1 class="font-weight-semi-bold text-uppercase mb-2">Bộ sưu tập Sản phẩm (CN03)</h1>
+    <div class="d-inline-flex">
+      <a href="/" class="text-dark font-weight-medium">Trang chủ</a>
+      <span class="px-2 text-dark">-</span>
+      <span class="text-primary font-weight-bold">Sản phẩm</span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid pt-2">
+  <div class="row px-xl-5">
+    <!-- Sidebar Filter -->
+    <aside class="col-lg-3 col-md-12">
+      <form method="GET" action="/shop" id="filterForm">
+        <% if (query && query.q) { %><input type="hidden" name="q" value="<%= query.q %>"><% } %>
+        
+        <div class="border-bottom mb-4 pb-4">
+          <h5 class="font-weight-semi-bold mb-3"><i class="fa fa-folder text-primary mr-2"></i>Danh mục</h5>
+          <div class="custom-control custom-radio mb-2">
+            <input type="radio" class="custom-control-input" id="cat-all" name="category_id" value="" <%= !query.category_id ? 'checked' : '' %> onchange="this.form.submit()">
+            <label class="custom-control-label" for="cat-all">Tất cả danh mục</label>
+          </div>
+          <% (locals.allCategories || []).forEach(cat => { %>
+            <div class="custom-control custom-radio mb-2">
+              <input type="radio" class="custom-control-input" id="cat-<%= cat.id %>" name="category_id" value="<%= cat.id %>" <%= query.category_id == cat.id ? 'checked' : '' %> onchange="this.form.submit()">
+              <label class="custom-control-label" for="cat-<%= cat.id %>"><%= cat.name %></label>
+            </div>
+          <% }); %>
+        </div>
+
+        <div class="border-bottom mb-4 pb-4">
+          <h5 class="font-weight-semi-bold mb-3"><i class="fa fa-tag text-primary mr-2"></i>Khoảng giá</h5>
+          <div class="custom-control custom-radio mb-2">
+            <input type="radio" class="custom-control-input" id="price-all" name="price_range" value="" <%= !query.price_range ? 'checked' : '' %> onchange="this.form.submit()">
+            <label class="custom-control-label" for="price-all">Tất cả mức giá</label>
+          </div>
+          <div class="custom-control custom-radio mb-2">
+            <input type="radio" class="custom-control-input" id="price-1" name="price_range" value="under200" <%= query.price_range === 'under200' ? 'checked' : '' %> onchange="this.form.submit()">
+            <label class="custom-control-label" for="price-1">Dưới 200.000 đ</label>
+          </div>
+          <div class="custom-control custom-radio mb-2">
+            <input type="radio" class="custom-control-input" id="price-2" name="price_range" value="200to500" <%= query.price_range === '200to500' ? 'checked' : '' %> onchange="this.form.submit()">
+            <label class="custom-control-label" for="price-2">200.000 – 500.000 đ</label>
+          </div>
+          <div class="custom-control custom-radio mb-2">
+            <input type="radio" class="custom-control-input" id="price-3" name="price_range" value="over500" <%= query.price_range === 'over500' ? 'checked' : '' %> onchange="this.form.submit()">
+            <label class="custom-control-label" for="price-3">Trên 500.000 đ</label>
+          </div>
+        </div>
+
+        <div class="border-bottom mb-4 pb-4">
+          <h5 class="font-weight-semi-bold mb-3"><i class="fa fa-palette text-primary mr-2"></i>Màu sắc</h5>
+          <div class="custom-control custom-radio mb-2">
+            <input type="radio" class="custom-control-input" id="color-all" name="color" value="" <%= !query.color ? 'checked' : '' %> onchange="this.form.submit()">
+            <label class="custom-control-label" for="color-all">Tất cả màu</label>
+          </div>
+          <% ['Đen', 'Trắng', 'Xanh', 'Đỏ'].forEach(col => { %>
+            <div class="custom-control custom-radio mb-2">
+              <input type="radio" class="custom-control-input" id="col-<%= col %>" name="color" value="<%= col %>" <%= query.color === col ? 'checked' : '' %> onchange="this.form.submit()">
+              <label class="custom-control-label" for="col-<%= col %>"><%= col %></label>
+            </div>
+          <% }); %>
+        </div>
+
+        <div class="border-bottom mb-4 pb-4">
+          <h5 class="font-weight-semi-bold mb-3"><i class="fa fa-ruler text-primary mr-2"></i>Kích thước</h5>
+          <div class="custom-control custom-radio mb-2">
+            <input type="radio" class="custom-control-input" id="size-all" name="size" value="" <%= !query.size ? 'checked' : '' %> onchange="this.form.submit()">
+            <label class="custom-control-label" for="size-all">Tất cả size</label>
+          </div>
+          <% ['S', 'M', 'L', 'XL'].forEach(sz => { %>
+            <div class="custom-control custom-radio mb-2">
+              <input type="radio" class="custom-control-input" id="sz-<%= sz %>" name="size" value="<%= sz %>" <%= query.size === sz ? 'checked' : '' %> onchange="this.form.submit()">
+              <label class="custom-control-label" for="sz-<%= sz %>"><%= sz %></label>
+            </div>
+          <% }); %>
+        </div>
+
+        <% if (query.category_id || query.price_range || query.color || query.size || query.q) { %>
+          <a href="/shop" class="btn btn-outline-secondary btn-block btn-sm mb-4">
+            <i class="fa fa-redo mr-1"></i> Xóa tất cả bộ lọc
+          </a>
+        <% } %>
+      </form>
+    </aside>
+
+    <!-- Product Grid -->
+    <div class="col-lg-9 col-md-12">
+      <div class="row pb-3">
+        <div class="col-12 pb-1">
+          <div class="d-flex align-items-center justify-content-between mb-4 bg-light p-3 border rounded">
+            <span>Tìm thấy <strong><%= total %></strong> sản phẩm <%= query.q ? `cho từ khóa "${query.q}"` : '' %></span>
+            <span class="text-muted small">Người phụ trách CN03: <strong>Nhựt</strong></span>
+          </div>
+        </div>
+
+        <% if (products && products.length > 0) { %>
+          <% products.forEach(product => { %>
+            <% 
+              const prices = product.variants.map(v => v.price);
+              const minPrice = prices.length ? Math.min(...prices) : 0;
+              const firstInStockVariant = product.variants.find(v => v.stock > 0);
+            %>
+            <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+              <div class="card product-item border-0 mb-4 shadow-sm bg-white">
+                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                  <a href="/shop/<%= product.id %>">
+                    <img class="img-fluid" src="/template/eshopper/img/product-<%= product.image_index %>.jpg" alt="Ảnh <%= product.name %>">
+                  </a>
+                </div>
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                  <h6 class="text-truncate mb-2 px-2">
+                    <a href="/shop/<%= product.id %>" class="text-dark font-weight-semi-bold text-decoration-none"><%= product.name %></a>
+                  </h6>
+                  <p class="small text-muted mb-2"><%= product.category ? product.category.name : 'Thời trang' %></p>
+                  <div class="d-flex justify-content-center">
+                    <h6 class="text-primary font-weight-bold">Từ <%= minPrice.toLocaleString('vi-VN') %> đ</h6>
+                  </div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light border">
+                  <a href="/shop/<%= product.id %>" class="btn btn-sm text-dark p-0">
+                    <i class="fas fa-eye text-primary mr-1"></i>Chi tiết
+                  </a>
+                  <% if (firstInStockVariant) { %>
+                    <button type="button" class="btn btn-sm text-primary p-0 font-weight-bold" onclick="ajaxAddToCart(<%= firstInStockVariant.id %>, 1, event)">
+                      <i class="fas fa-cart-plus mr-1"></i>Thêm nhanh (AJAX)
+                    </button>
+                  <% } else { %>
+                    <span class="btn btn-sm text-muted p-0" disabled>
+                      <i class="fas fa-times-circle mr-1"></i>Hết hàng
+                    </span>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <div class="col-12 text-center py-5 bg-white border rounded">
+            <i class="fa fa-box-open fa-3x text-muted mb-3"></i>
+            <h5>Chưa có sản phẩm phù hợp với bộ lọc.</h5>
+            <p class="text-muted">Vui lòng thử lại với các điều kiện lọc khác hoặc xóa bộ lọc.</p>
+            <a href="/shop" class="btn btn-primary mt-2">Xem tất cả sản phẩm</a>
+          </div>
+        <% } %>
+
+        <!-- Pagination -->
+        <% if (lastPage > 1) { %>
+          <div class="col-12 pb-1">
+            <nav aria-label="Phân trang">
+              <ul class="pagination justify-content-center mb-3">
+                <% for (let p = 1; p <= lastPage; p++) { %>
+                  <li class="page-item <%= p === currentPage ? 'active' : '' %>">
+                    <a class="page-link" href="/shop?<%= new URLSearchParams({ ...query, page: p }).toString() %>"><%= p %></a>
+                  </li>
+                <% } %>
+              </ul>
+            </nav>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,30 @@
+<% if (locals.flash && locals.flash.success) { %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <%= locals.flash.success %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<% } %>
+
+<% if (locals.flash && locals.flash.error) { %>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <%= locals.flash.error %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<% } %>
+
+<% if (locals.flash && locals.flash.errors && locals.flash.errors.length > 0) { %>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <ul class="mb-0">
+      <% locals.flash.errors.forEach(err => { %>
+        <li><%= err %></li>
+      <% }); %>
+    </ul>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<% } %>

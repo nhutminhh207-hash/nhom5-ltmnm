@@ -1,0 +1,453 @@
+<%- include('partials/header') %>
+
+<div class="container-fluid bg-secondary mb-4">
+  <div class="d-flex flex-column align-items-center justify-content-center" style="min-height:180px">
+    <h1 class="font-weight-semi-bold text-uppercase mb-2">Báo cáo Đồ án Nhóm — EShopper</h1>
+    <div class="d-inline-flex">
+      <a href="/" class="text-dark font-weight-medium">Trang chủ</a>
+      <span class="px-2 text-dark">-</span>
+      <span class="text-primary font-weight-bold">Báo cáo & Tài liệu kỹ thuật</span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid pt-2 px-xl-5 pb-5">
+  <!-- Navigation Tabs -->
+  <ul class="nav nav-pills mb-4 nav-justified bg-light p-2 rounded border" id="reportTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active font-weight-bold" id="tab-overview" data-toggle="pill" href="#overview" role="tab">
+        <i class="fa fa-info-circle mr-1"></i> 1. Giới thiệu Đề tài
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link font-weight-bold" id="tab-members" data-toggle="pill" href="#members" role="tab">
+        <i class="fa fa-users mr-1"></i> 2. Phân công Công việc
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link font-weight-bold" id="tab-erd" data-toggle="pill" href="#erd" role="tab">
+        <i class="fa fa-database mr-1"></i> 3. Thiết kế CSDL (ERD)
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link font-weight-bold" id="tab-usecase" data-toggle="pill" href="#usecase" role="tab">
+        <i class="fa fa-project-diagram mr-1"></i> 4. UML Use Case
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link font-weight-bold" id="tab-features" data-toggle="pill" href="#features" role="tab">
+        <i class="fa fa-star mr-1"></i> 5. Chức năng & Điểm cộng
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link font-weight-bold" id="tab-source" data-toggle="pill" href="#source" role="tab">
+        <i class="fa fa-code mr-1"></i> 6. Cài đặt & Triển khai
+      </a>
+    </li>
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content" id="reportTabContent">
+    <!-- 1. OVERVIEW -->
+    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4">
+          <h3 class="font-weight-bold text-primary mb-3">Hệ thống Website Bán hàng Thời trang EShopper</h3>
+          <p class="lead">Đồ án môn học Lập trình Web — Xây dựng website thương mại điện tử chuyên ngành thời trang với kiến trúc MVC, bảo mật đa tầng và tối ưu trải nghiệm người dùng.</p>
+          
+          <div class="row mt-4">
+            <div class="col-md-6 mb-3">
+              <div class="border p-3 rounded h-100 bg-light">
+                <h5 class="font-weight-bold text-dark"><i class="fa fa-bullseye text-primary mr-2"></i>Mục tiêu đề tài</h5>
+                <ul class="mb-0 pl-3">
+                  <li>Xây dựng giải pháp bán hàng thời trang hoàn chỉnh cho khách hàng cá nhân và quản trị viên cửa hàng.</li>
+                  <li>Hỗ trợ phân loại biến thể thời trang chuyên sâu (mỗi sản phẩm có nhiều biến thể theo <strong>Size</strong> và <strong>Màu sắc</strong>, có SKU, đơn giá và lượng tồn kho riêng biệt).</li>
+                  <li>Bảo vệ giao dịch đặt hàng COD an toàn, chống double-spending, tự động hoàn trả tồn kho khi đơn bị hủy.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <div class="border p-3 rounded h-100 bg-light">
+                <h5 class="font-weight-bold text-dark"><i class="fa fa-layer-group text-primary mr-2"></i>Công nghệ sử dụng</h5>
+                <ul class="mb-0 pl-3">
+                  <li><strong>Backend:</strong> Laravel Framework 11 (PHP 8.2+) / Node.js Express 22 High Performance.</li>
+                  <li><strong>Database:</strong> MySQL 8.0+ (InnoDB Engine, Foreign Key Cascades, Transactions).</li>
+                  <li><strong>Frontend:</strong> Blade Template Engine / EJS, Bootstrap 4.4, jQuery, FontAwesome 5.</li>
+                  <li><strong>Mở rộng:</strong> AJAX RESTful APIs, Bản đồ định vị Showroom (Leaflet / Maps API), Weather Forecast Widget.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. MEMBERS & ASSIGNMENT -->
+    <div class="tab-pane fade" id="members" role="tabpanel">
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3 border-bottom">
+          <h5 class="mb-0 font-weight-bold"><i class="fa fa-users-cog mr-2 text-primary"></i>Bảng Phân công Trách nhiệm & Tiến độ (5 Thành viên)</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover mb-0">
+              <thead class="thead-light">
+                <tr>
+                  <th style="width: 15%;">Thành viên</th>
+                  <th style="width: 15%;">Mã Module</th>
+                  <th style="width: 35%;">Nhiệm vụ & Chức năng phụ trách</th>
+                  <th style="width: 20%;">Sản phẩm bàn giao</th>
+                  <th style="width: 15%;" class="text-center">Đánh giá</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Châu</strong><br><small class="text-muted">Nhóm trưởng / UI Lead</small></td>
+                  <td><span class="badge badge-primary">CN01</span><br>Quản lý Danh mục</td>
+                  <td>
+                    - Thiết kế Master Layout (Header, Footer, Navbar, Alerts, Breadcrumbs).<br>
+                    - Xây dựng chức năng CRUD Danh mục sản phẩm (Tạo, Xem, Sửa, Xóa).<br>
+                    - Xử lý slug tự động và validation dữ liệu form danh mục.
+                  </td>
+                  <td>Layouts, Views <code>admin/categories</code>, Controllers, Routes</td>
+                  <td class="text-center"><span class="badge badge-success px-2 py-1">100% Hoàn thành</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Danh</strong><br><small class="text-muted">Database Lead</small></td>
+                  <td><span class="badge badge-primary">CN02</span><br>Sản phẩm & Biến thể</td>
+                  <td>
+                    - Thiết kế CSDL (ERD, Migrations, Seeders cho 15 sản phẩm, 30 biến thể).<br>
+                    - Xây dựng chức năng CRUD Sản phẩm kèm quản lý Biến thể (Size, Color, Price, Stock).<br>
+                    - Kiểm tra ràng buộc tồn kho không âm và tính toàn vẹn khóa ngoại.
+                  </td>
+                  <td>Migrations, Seeders, Views <code>admin/products</code>, Model quan hệ</td>
+                  <td class="text-center"><span class="badge badge-success px-2 py-1">100% Hoàn thành</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Nhựt</strong><br><small class="text-muted">QA & Shop Lead</small></td>
+                  <td><span class="badge badge-primary">CN03 + CN04</span><br>Cửa hàng & Giỏ hàng</td>
+                  <td>
+                    - Xây dựng trang danh mục sản phẩm (Shop Catalog), tìm kiếm và phân trang.<br>
+                    - Bộ lọc nâng cao theo khoảng giá, màu sắc, kích thước.<br>
+                    - Chức năng Giỏ hàng (CartService): thêm, sửa số lượng, xóa sản phẩm, kiểm tra tồn kho.<br>
+                    - Viết bộ Feature Tests tự động (FoundationTest).
+                  </td>
+                  <td>Views <code>shop</code>, <code>cart</code>, CartService, Test cases</td>
+                  <td class="text-center"><span class="badge badge-success px-2 py-1">100% Hoàn thành</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Anh Tú</strong><br><small class="text-muted">Checkout & UML Lead</small></td>
+                  <td><span class="badge badge-primary">CN05</span><br>Đặt hàng & Thanh toán</td>
+                  <td>
+                    - Xây dựng sơ đồ UML Use Case toàn hệ thống.<br>
+                    - Xây dựng luồng Đặt hàng (Checkout) phương thức COD (0 đ ship).<br>
+                    - Cơ chế Session Quote Token chống thay đổi giá ngầm và chống đặt trùng (Idempotency).
+                  </td>
+                  <td>UML Use Case, CheckoutRequest, View <code>checkout</code></td>
+                  <td class="text-center"><span class="badge badge-success px-2 py-1">100% Hoàn thành</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Kiều</strong><br><small class="text-muted">Auth & Order Lead</small></td>
+                  <td><span class="badge badge-primary">CN06 + Auth</span><br>Quản lý Đơn & Xác thực</td>
+                  <td>
+                    - Xây dựng Auth: Đăng ký, Đăng nhập, Đăng xuất, Phân quyền Role Middleware.<br>
+                    - Quản trị vòng đời đơn hàng (pending &rarr; confirmed &rarr; shipping &rarr; completed / cancelled).<br>
+                    - Tự động hoàn kho khi khách hoặc admin hủy đơn hàng.
+                  </td>
+                  <td>AuthController, OrderService, Views <code>orders</code>, Middleware</td>
+                  <td class="text-center"><span class="badge badge-success px-2 py-1">100% Hoàn thành</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. DATABASE ERD -->
+    <div class="tab-pane fade" id="erd" role="tabpanel">
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3 border-bottom">
+          <h5 class="mb-0 font-weight-bold"><i class="fa fa-project-diagram mr-2 text-primary"></i>Sơ đồ Thực thể Liên kết (Entity Relationship Diagram - ERD)</h5>
+        </div>
+        <div class="card-body p-4">
+          <!-- Interactive SVG ERD Diagram -->
+          <div class="bg-light p-3 rounded border text-center mb-4">
+            <svg viewBox="0 0 950 480" class="w-100" style="max-height: 520px; font-family: sans-serif;">
+              <!-- USERS table -->
+              <g transform="translate(30, 30)">
+                <rect width="200" height="150" rx="6" fill="#ffffff" stroke="#007bff" stroke-width="2"/>
+                <rect width="200" height="32" rx="6" fill="#007bff"/>
+                <text x="100" y="21" fill="#ffffff" font-weight="bold" font-size="14" text-anchor="middle">USERS</text>
+                <text x="15" y="55" font-size="12" fill="#333">PK id (BIGINT)</text>
+                <text x="15" y="75" font-size="12" fill="#333">name (VARCHAR)</text>
+                <text x="15" y="95" font-size="12" fill="#333">email (VARCHAR, Unique)</text>
+                <text x="15" y="115" font-size="12" fill="#333">password (VARCHAR)</text>
+                <text x="15" y="135" font-size="12" fill="#e74a3b" font-weight="bold">role (user | admin)</text>
+              </g>
+
+              <!-- CATEGORIES table -->
+              <g transform="translate(360, 30)">
+                <rect width="200" height="120" rx="6" fill="#ffffff" stroke="#28a745" stroke-width="2"/>
+                <rect width="200" height="32" rx="6" fill="#28a745"/>
+                <text x="100" y="21" fill="#ffffff" font-weight="bold" font-size="14" text-anchor="middle">CATEGORIES</text>
+                <text x="15" y="55" font-size="12" fill="#333">PK id (BIGINT)</text>
+                <text x="15" y="75" font-size="12" fill="#333">name (VARCHAR)</text>
+                <text x="15" y="95" font-size="12" fill="#333">slug (VARCHAR, Unique)</text>
+                <text x="15" y="115" font-size="12" fill="#333">description (TEXT)</text>
+              </g>
+
+              <!-- PRODUCTS table -->
+              <g transform="translate(680, 30)">
+                <rect width="230" height="150" rx="6" fill="#ffffff" stroke="#17a2b8" stroke-width="2"/>
+                <rect width="230" height="32" rx="6" fill="#17a2b8"/>
+                <text x="115" y="21" fill="#ffffff" font-weight="bold" font-size="14" text-anchor="middle">PRODUCTS</text>
+                <text x="15" y="55" font-size="12" fill="#333">PK id (BIGINT)</text>
+                <text x="15" y="75" font-size="12" fill="#007bff" font-weight="bold">FK category_id &rarr; Categories</text>
+                <text x="15" y="95" font-size="12" fill="#333">name (VARCHAR)</text>
+                <text x="15" y="115" font-size="12" fill="#333">slug (VARCHAR, Unique)</text>
+                <text x="15" y="135" font-size="12" fill="#333">is_active (BOOLEAN)</text>
+              </g>
+
+              <!-- Line: Categories (1) -> Products (N) -->
+              <path d="M 560 90 L 680 90" stroke="#28a745" stroke-width="2" marker-end="url(#arrow)"/>
+              <text x="610" y="80" font-size="11" fill="#28a745" font-weight="bold">1 : N</text>
+
+              <!-- PRODUCT_VARIANTS table -->
+              <g transform="translate(680, 270)">
+                <rect width="230" height="170" rx="6" fill="#ffffff" stroke="#6f42c1" stroke-width="2"/>
+                <rect width="230" height="32" rx="6" fill="#6f42c1"/>
+                <text x="115" y="21" fill="#ffffff" font-weight="bold" font-size="14" text-anchor="middle">PRODUCT_VARIANTS</text>
+                <text x="15" y="55" font-size="12" fill="#333">PK id (BIGINT)</text>
+                <text x="15" y="75" font-size="12" fill="#17a2b8" font-weight="bold">FK product_id &rarr; Products</text>
+                <text x="15" y="95" font-size="12" fill="#333">sku (VARCHAR, Unique)</text>
+                <text x="15" y="115" font-size="12" fill="#333">size (S/M/L/XL), color</text>
+                <text x="15" y="135" font-size="12" fill="#333">price (DECIMAL)</text>
+                <text x="15" y="155" font-size="12" fill="#e74a3b" font-weight="bold">stock (INT, >= 0)</text>
+              </g>
+
+              <!-- Line: Products (1) -> Variants (N) -->
+              <path d="M 795 180 L 795 270" stroke="#17a2b8" stroke-width="2"/>
+              <text x="805" y="230" font-size="11" fill="#17a2b8" font-weight="bold">1 : N</text>
+
+              <!-- CART_ITEMS table -->
+              <g transform="translate(360, 270)">
+                <rect width="220" height="130" rx="6" fill="#ffffff" stroke="#fd7e14" stroke-width="2"/>
+                <rect width="220" height="32" rx="6" fill="#fd7e14"/>
+                <text x="110" y="21" fill="#ffffff" font-weight="bold" font-size="14" text-anchor="middle">CART_ITEMS</text>
+                <text x="15" y="55" font-size="12" fill="#333">PK id (BIGINT)</text>
+                <text x="15" y="75" font-size="12" fill="#007bff">FK user_id &rarr; Users</text>
+                <text x="15" y="95" font-size="12" fill="#6f42c1">FK variant_id &rarr; Variants</text>
+                <text x="15" y="115" font-size="12" fill="#333">quantity (INT, >= 1)</text>
+              </g>
+
+              <!-- Line: Users -> CartItems -->
+              <path d="M 130 180 L 130 330 L 360 330" stroke="#007bff" stroke-width="2" fill="none"/>
+              <text x="210" y="320" font-size="11" fill="#007bff" font-weight="bold">1 : N</text>
+
+              <!-- Line: Variants -> CartItems -->
+              <path d="M 680 340 L 580 340" stroke="#6f42c1" stroke-width="2"/>
+
+              <!-- ORDERS table -->
+              <g transform="translate(30, 250)">
+                <rect width="220" height="190" rx="6" fill="#ffffff" stroke="#e83e8c" stroke-width="2"/>
+                <rect width="220" height="32" rx="6" fill="#e83e8c"/>
+                <text x="110" y="21" fill="#ffffff" font-weight="bold" font-size="14" text-anchor="middle">ORDERS</text>
+                <text x="15" y="55" font-size="12" fill="#333">PK id (BIGINT)</text>
+                <text x="15" y="75" font-size="12" fill="#007bff">FK user_id &rarr; Users</text>
+                <text x="15" y="95" font-size="12" fill="#333">checkout_token (UUID)</text>
+                <text x="15" y="115" font-size="12" fill="#333">recipient_name, phone</text>
+                <text x="15" y="135" font-size="12" fill="#333">address, payment_method</text>
+                <text x="15" y="155" font-size="12" fill="#e74a3b" font-weight="bold">status (pending/confirmed...)</text>
+                <text x="15" y="175" font-size="12" fill="#333">total_amount (DECIMAL)</text>
+              </g>
+            </svg>
+          </div>
+
+          <h5 class="font-weight-bold text-dark mt-4">Mô tả Quan hệ Dữ liệu:</h5>
+          <ol>
+            <li><strong>Category &harr; Product (1 &ndash; N):</strong> Một danh mục chứa nhiều sản phẩm thời trang. Xóa danh mục sẽ kiểm tra ràng buộc không được xóa nếu còn sản phẩm.</li>
+            <li><strong>Product &harr; ProductVariant (1 &ndash; N):</strong> Một sản phẩm mẫu có nhiều biến thể theo Size (S, M, L, XL) và Màu sắc (Đen, Trắng, Xanh, Đỏ). Mỗi biến thể có SKU, đơn giá và lượng tồn kho độc lập.</li>
+            <li><strong>User &harr; CartItem (1 &ndash; N):</strong> Khách hàng lưu các mặt hàng vào giỏ hàng cá nhân.</li>
+            <li><strong>User &harr; Order (1 &ndash; N):</strong> Mỗi đơn hàng thuộc sở hữu của một khách hàng, có mã giao dịch duy nhất (UUID checkout_token).</li>
+            <li><strong>Order &harr; OrderItem (1 &ndash; N):</strong> Snapshot chi tiết sản phẩm, đơn giá tại thời điểm mua, size, màu và số lượng.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. UML USE CASE -->
+    <div class="tab-pane fade" id="usecase" role="tabpanel">
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3 border-bottom">
+          <h5 class="mb-0 font-weight-bold"><i class="fa fa-sitemap mr-2 text-primary"></i>Sơ đồ UML Use Case Hệ thống (Khách hàng & Quản trị viên)</h5>
+        </div>
+        <div class="card-body p-4">
+          <div class="bg-light p-4 rounded border text-center mb-4">
+            <svg viewBox="0 0 900 480" class="w-100" style="max-height: 500px; font-family: sans-serif;">
+              <!-- System Boundary Box -->
+              <rect x="250" y="20" width="400" height="440" rx="10" fill="#f8f9fa" stroke="#6c757d" stroke-width="2" stroke-dasharray="6,6"/>
+              <text x="450" y="45" font-weight="bold" font-size="16" fill="#343a40" text-anchor="middle">HỆ THỐNG SHOP THỜI TRANG ESHOPPER</text>
+
+              <!-- Actor: Khách hàng (User) -->
+              <g transform="translate(60, 180)">
+                <circle cx="40" cy="30" r="18" fill="#007bff"/>
+                <line x1="40" y1="48" x2="40" y2="100" stroke="#007bff" stroke-width="4"/>
+                <line x1="40" y1="65" x2="10" y2="85" stroke="#007bff" stroke-width="4"/>
+                <line x1="40" y1="65" x2="70" y2="85" stroke="#007bff" stroke-width="4"/>
+                <line x1="40" y1="100" x2="15" y2="140" stroke="#007bff" stroke-width="4"/>
+                <line x1="40" y1="100" x2="65" y2="140" stroke="#007bff" stroke-width="4"/>
+                <text x="40" y="165" font-weight="bold" font-size="14" fill="#007bff" text-anchor="middle">Khách hàng (User)</text>
+              </g>
+
+              <!-- Actor: Quản trị viên (Admin) -->
+              <g transform="translate(760, 180)">
+                <circle cx="40" cy="30" r="18" fill="#dc3545"/>
+                <line x1="40" y1="48" x2="40" y2="100" stroke="#dc3545" stroke-width="4"/>
+                <line x1="40" y1="65" x2="10" y2="85" stroke="#dc3545" stroke-width="4"/>
+                <line x1="40" y1="65" x2="70" y2="85" stroke="#dc3545" stroke-width="4"/>
+                <line x1="40" y1="100" x2="15" y2="140" stroke="#dc3545" stroke-width="4"/>
+                <line x1="40" y1="100" x2="65" y2="140" stroke="#dc3545" stroke-width="4"/>
+                <text x="40" y="165" font-weight="bold" font-size="14" fill="#dc3545" text-anchor="middle">Quản trị viên (Admin)</text>
+              </g>
+
+              <!-- Use cases in center -->
+              <!-- UC1: Xem & Tìm kiếm sản phẩm -->
+              <ellipse cx="450" cy="80" rx="140" ry="22" fill="#e7f1ff" stroke="#007bff" stroke-width="1.5"/>
+              <text x="450" y="85" font-size="12" fill="#0056b3" font-weight="bold" text-anchor="middle">UC01: Xem & Tìm kiếm sản phẩm (Lọc)</text>
+
+              <!-- UC2: Đăng ký / Đăng nhập -->
+              <ellipse cx="450" cy="140" rx="140" ry="22" fill="#e7f1ff" stroke="#007bff" stroke-width="1.5"/>
+              <text x="450" y="145" font-size="12" fill="#0056b3" font-weight="bold" text-anchor="middle">UC02: Đăng ký / Đăng nhập / Đăng xuất</text>
+
+              <!-- UC3: Quản lý giỏ hàng -->
+              <ellipse cx="450" cy="200" rx="140" ry="22" fill="#e7f1ff" stroke="#007bff" stroke-width="1.5"/>
+              <text x="450" y="205" font-size="12" fill="#0056b3" font-weight="bold" text-anchor="middle">UC03: Thêm / Sửa / Xóa Giỏ hàng</text>
+
+              <!-- UC4: Đặt hàng & Hủy đơn -->
+              <ellipse cx="450" cy="260" rx="140" ry="22" fill="#e7f1ff" stroke="#007bff" stroke-width="1.5"/>
+              <text x="450" y="265" font-size="12" fill="#0056b3" font-weight="bold" text-anchor="middle">UC04: Đặt hàng COD & Hủy đơn (Hoàn kho)</text>
+
+              <!-- UC5: CRUD Danh mục & Sản phẩm -->
+              <ellipse cx="450" cy="320" rx="140" ry="22" fill="#ffebee" stroke="#dc3545" stroke-width="1.5"/>
+              <text x="450" y="325" font-size="12" fill="#c82333" font-weight="bold" text-anchor="middle">UC05: CRUD Danh mục & Sản phẩm (CN01/02)</text>
+
+              <!-- UC6: Duyệt đơn & Chuyển trạng thái -->
+              <ellipse cx="450" cy="380" rx="140" ry="22" fill="#ffebee" stroke="#dc3545" stroke-width="1.5"/>
+              <text x="450" y="385" font-size="12" fill="#c82333" font-weight="bold" text-anchor="middle">UC06: Quản lý trạng thái Đơn hàng (CN06)</text>
+
+              <!-- Connecting lines User -->
+              <line x1="120" y1="210" x2="310" y2="85" stroke="#007bff" stroke-width="1.5"/>
+              <line x1="120" y1="220" x2="310" y2="140" stroke="#007bff" stroke-width="1.5"/>
+              <line x1="120" y1="230" x2="310" y2="200" stroke="#007bff" stroke-width="1.5"/>
+              <line x1="120" y1="240" x2="310" y2="260" stroke="#007bff" stroke-width="1.5"/>
+
+              <!-- Connecting lines Admin -->
+              <line x1="780" y1="220" x2="590" y2="140" stroke="#dc3545" stroke-width="1.5"/>
+              <line x1="780" y1="240" x2="590" y2="320" stroke="#dc3545" stroke-width="1.5"/>
+              <line x1="780" y1="250" x2="590" y2="380" stroke="#dc3545" stroke-width="1.5"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. FEATURES & BONUS POINTS -->
+    <div class="tab-pane fade" id="features" role="tabpanel">
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-primary text-white py-3">
+              <h5 class="mb-0 font-weight-bold"><i class="fa fa-check-circle mr-2"></i>Chức năng Cơ bản (Quy định bắt buộc)</h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item px-0">
+                  <i class="fa fa-check text-success mr-2"></i><strong>CRUD trên 2 bảng có quan hệ:</strong> Quản lý Danh mục (Categories) & Sản phẩm - Biến thể (Products - Variants).
+                </li>
+                <li class="list-group-item px-0">
+                  <i class="fa fa-check text-success mr-2"></i><strong>Phân quyền Role 2 cấp:</strong> Phân biệt nghiêm ngặt Admin (quản lý kho, đơn) và User (mua hàng, không thể tự nâng quyền admin).
+                </li>
+                <li class="list-group-item px-0">
+                  <i class="fa fa-check text-success mr-2"></i><strong>Tìm kiếm + Phân trang:</strong> Tìm theo từ khóa tên sản phẩm, danh mục, lọc giá, kích cỡ, màu sắc kết hợp phân trang chuẩn.
+                </li>
+                <li class="list-group-item px-0">
+                  <i class="fa fa-check text-success mr-2"></i><strong>Validation form:</strong> Kiểm tra độ dài, unique email/slug, stock &gt;= 0, giá dương, xác nhận mật khẩu.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+          <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-success text-white py-3">
+              <h5 class="mb-0 font-weight-bold"><i class="fa fa-award mr-2"></i>Yêu cầu Mở rộng (Tính điểm cộng)</h5>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item px-0">
+                  <i class="fa fa-star text-warning mr-2"></i><strong>Tích hợp AJAX:</strong> Thêm vào giỏ hàng tức thì (Instant toast không reload), cập nhật số lượng trực tiếp và live search gợi ý.
+                </li>
+                <li class="list-group-item px-0">
+                  <i class="fa fa-star text-warning mr-2"></i><strong>Bình luận & Đánh giá sao:</strong> Khách hàng có thể để lại nhận xét và chấm điểm sao cho sản phẩm.
+                </li>
+                <li class="list-group-item px-0">
+                  <i class="fa fa-star text-warning mr-2"></i><strong>Tích hợp API Bên ngoài:</strong> Bản đồ định vị hệ thống 4 chi nhánh Showroom tại TP.HCM kèm định vị GPS và thông tin liên hệ.
+                </li>
+                <li class="list-group-item px-0">
+                  <i class="fa fa-star text-warning mr-2"></i><strong>Widget Thời tiết & Gợi ý trang phục:</strong> Dự báo thời tiết địa phương tự động gợi ý mặc áo thun, sơ mi hay áo khoác.
+                </li>
+                <li class="list-group-item px-0">
+                  <i class="fa fa-star text-warning mr-2"></i><strong>Responsive chuẩn thiết bị di động:</strong> Menu drawer trượt mượt mà, layout tương thích 100% điện thoại và máy tính bảng.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. SETUP & SOURCE CODE -->
+    <div class="tab-pane fade" id="source" role="tabpanel">
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white py-3 border-bottom">
+          <h5 class="mb-0 font-weight-bold"><i class="fa fa-terminal mr-2 text-primary"></i>Hướng dẫn Cài đặt & Triển khai dự án Laravel gốc</h5>
+        </div>
+        <div class="card-body p-4">
+          <p>Dự án tuân thủ cấu trúc chuẩn của Laravel 11. Dưới đây là các bước để chạy mã nguồn gốc trên máy trạm (XAMPP/Laragon/MySQL Server):</p>
+          
+          <pre class="bg-dark text-light p-3 rounded"><code># 1. Cài đặt các gói phụ thuộc PHP Composer
+composer install
+
+# 2. Cài đặt các gói phụ thuộc JavaScript
+npm install
+
+# 3. Tạo file cấu hình môi trường
+cp .env.example .env
+
+# 4. Sinh khóa ứng dụng
+php artisan key:generate
+
+# 5. Cấu hình kết nối MySQL trong .env và chạy migration kèm seeder mẫu
+php artisan migrate:fresh --seed --seeder=FashionDemoSeeder
+
+# 6. Khởi động máy chủ phát triển
+php artisan serve
+# &rarr; Ứng dụng chạy tại địa chỉ: http://127.0.0.1:8000
+</code></pre>
+
+          <div class="alert alert-info mt-3">
+            <strong>Thông tin tài khoản kiểm thử mặc định:</strong><br>
+            - <strong>Quản trị viên (Admin):</strong> Email: <code>admin@example.test</code> | Password: <code>DemoShop2026!</code><br>
+            - <strong>Khách hàng A (User):</strong> Email: <code>usera@example.test</code> | Password: <code>DemoShop2026!</code><br>
+            - <strong>Khách hàng B (User):</strong> Email: <code>userb@example.test</code> | Password: <code>DemoShop2026!</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

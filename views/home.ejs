@@ -1,0 +1,88 @@
+<%- include('partials/header') %>
+
+<div class="container-fluid">
+  <div class="row px-xl-5">
+    <div class="col-lg-3 d-none d-lg-block">
+      <div class="border">
+        <h5 class="px-4 py-3 mb-0">Bộ sưu tập</h5>
+        <% (locals.allCategories || []).forEach(cat => { %>
+          <div class="px-4 py-3 border-top">
+            <a href="/shop?category_id=<%= cat.id %>" class="text-dark text-decoration-none d-block"><%= cat.name %></a>
+          </div>
+        <% }); %>
+        <a href="/shop" class="d-block px-4 py-3 border-top text-primary font-weight-bold">Xem tất cả sản phẩm &rarr;</a>
+      </div>
+    </div>
+    <div class="col-lg-9">
+      <div id="header-carousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active" style="height:410px">
+            <img class="img-fluid w-100 h-100" style="object-fit:cover" src="/template/eshopper/img/carousel-1.jpg" alt="Bộ sưu tập thời trang">
+            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+              <div class="p-3" style="max-width:700px">
+                <h4 class="text-light text-uppercase font-weight-medium mb-3">Phong cách mỗi ngày</h4>
+                <h2 class="display-4 text-white font-weight-semi-bold mb-4">Thời trang dành cho bạn</h2>
+                <a href="/shop" class="btn btn-light py-2 px-3">Khám phá ngay</a>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item" style="height:410px">
+            <img class="img-fluid w-100 h-100" style="object-fit:cover" src="/template/eshopper/img/carousel-2.jpg" alt="Phong cách thời trang">
+            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+              <h2 class="display-4 text-white font-weight-semi-bold">Bộ sưu tập mới</h2>
+              <a href="/shop" class="btn btn-light py-2 px-3 mt-3">Xem sản phẩm</a>
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#header-carousel" data-slide="prev" aria-label="Banner trước">
+          <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#header-carousel" data-slide="next" aria-label="Banner tiếp theo">
+          <span class="carousel-control-next-icon"></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid pt-5">
+  <div class="row px-xl-5 pb-3">
+    <% const features = [
+      { icon: 'fa-check', label: 'Phong cách đa dạng' },
+      { icon: 'fa-tshirt', label: 'Nhiều lựa chọn' },
+      { icon: 'fa-palette', label: 'Size và màu sắc' },
+      { icon: 'fa-shopping-bag', label: 'Khám phá bộ sưu tập' }
+    ]; %>
+    <% features.forEach(f => { %>
+      <div class="col-lg-3 col-md-6 pb-1">
+        <div class="d-flex align-items-center border mb-4 p-4 shadow-sm bg-white">
+          <i class="fa <%= f.icon %> text-primary mr-3 h2 mb-0"></i>
+          <h5 class="font-weight-semi-bold m-0"><%= f.label %></h5>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<div class="container-fluid pt-3">
+  <div class="text-center mb-4">
+    <h2 class="section-title px-5"><span class="px-2">Bộ sưu tập thời trang</span></h2>
+  </div>
+  <div class="row px-xl-5 pb-3">
+    <% (locals.allCategories || []).forEach((cat, idx) => { %>
+      <div class="col-lg-4 col-md-6 pb-1">
+        <div class="cat-item d-flex flex-column border mb-4 p-4 text-center bg-white shadow-sm">
+          <a href="/shop?category_id=<%= cat.id %>" class="cat-img position-relative overflow-hidden mb-3">
+            <img class="img-fluid w-100" src="/template/eshopper/img/cat-<%= (idx % 6) + 1 %>.jpg" alt="Ảnh minh họa <%= cat.name %>" style="height:260px; object-fit:cover;">
+          </a>
+          <h5 class="font-weight-semi-bold m-0">
+            <a href="/shop?category_id=<%= cat.id %>" class="text-dark text-decoration-none"><%= cat.name %></a>
+          </h5>
+          <p class="text-muted small mt-2 mb-0"><%= cat.description %></p>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

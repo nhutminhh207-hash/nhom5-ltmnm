@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= typeof title !== 'undefined' ? title : 'EShopper — Fashion Shop' %></title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css">
+<link rel="stylesheet" href="/template/eshopper/lib/owlcarousel/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="/template/eshopper/css/style.css">
+<style>
+.product-img img { width:100%; height:280px; object-fit:cover; }
+.foundation { background:#fff4ce; padding:16px; border-left:4px solid #b98300; margin-bottom:20px; border-radius:4px; font-size: 14px; }
+pre { white-space:pre-wrap; }
+.table-responsive { overflow-x:auto; }
+.badge-role-admin { background:#d9534f; color:#fff; font-size:11px; padding:3px 7px; border-radius:10px; }
+.badge-role-user { background:#0275d8; color:#fff; font-size:11px; padding:3px 7px; border-radius:10px; }
+.ajax-search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-top: none;
+  z-index: 1050;
+  max-height: 320px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: none;
+}
+.ajax-search-item {
+  padding: 10px 14px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+}
+.ajax-search-item:hover {
+  background: #f8f9fa;
+  color: #D19C97;
+  text-decoration: none;
+}
+/* Toast Notification */
+#appToast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  min-width: 280px;
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<!-- Toast Alert for AJAX operations -->
+<div id="appToast" class="alert alert-success shadow-lg border-0 d-flex align-items-center" role="alert">
+  <i class="fa fa-check-circle fa-2x mr-3 text-white"></i>
+  <div>
+    <strong class="d-block text-white" id="toastTitle">Thành công!</strong>
+    <span class="text-white small" id="toastMessage">Sản phẩm đã được thêm vào giỏ.</span>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row bg-secondary py-2 px-xl-5">
+    <div class="col-6 small">
+      <i class="fa fa-tag mr-1 text-primary"></i> Miễn phí giao hàng COD toàn quốc cho tất cả đơn hàng
+    </div>
+    <div class="col-6 text-right small">
+      <a href="/bao-cao" class="text-dark mr-3 font-weight-bold">
+        <i class="fa fa-file-alt text-primary mr-1"></i> Báo cáo Đồ án (ERD & Use Case)
+      </a>
+      <a href="/showrooms" class="text-dark font-weight-bold">
+        <i class="fa fa-map-marker-alt text-danger mr-1"></i> Hệ thống Showroom
+      </a>
+    </div>
+  </div>
+  
+  <div class="row align-items-center py-3 px-xl-5">
+    <div class="col-lg-3 col-12 mb-3 mb-lg-0">
+      <a href="/" class="text-decoration-none">
+        <h1 class="m-0 display-5 font-weight-semi-bold">
+          <span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper
+        </h1>
+      </a>
+    </div>
+    <div class="col-lg-6 col-8 position-relative">
+      <form action="/shop" method="GET" class="input-group">
+        <input type="search" id="headerSearchInput" name="q" class="form-control" placeholder="Tìm kiếm nhanh sản phẩm (AJAX live search)..." value="<%= typeof query !== 'undefined' && query && query.q ? query.q : '' %>" autocomplete="off">
+        <div class="input-group-append">
+          <button type="submit" class="input-group-text bg-transparent text-primary" title="Tìm kiếm">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+      </form>
+      <!-- AJAX Search Results Dropdown -->
+      <div id="ajaxSearchResults" class="ajax-search-results"></div>
+    </div>
+    <div class="col-lg-3 col-4 text-right">
+      <a href="/cart" class="btn border" aria-label="Giỏ hàng">
+        <i class="fas fa-shopping-cart text-primary"></i>
+        <span class="d-none d-md-inline ml-1">Giỏ hàng</span>
+        <span class="badge badge-primary ml-1" id="globalCartCount"><%= locals.cartCount || 0 %></span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row border-top px-xl-5">
+    <div class="col-lg-3">
+      <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" href="#navbar-vertical" role="button" aria-expanded="false" style="height:65px;padding:0 30px">
+        <h6 class="m-0">Danh mục sản phẩm</h6>
+        <i class="fa fa-angle-down text-dark"></i>
+      </a>
+      <nav class="collapse navbar navbar-vertical navbar-light p-0 border bg-light" id="navbar-vertical">
+        <div class="navbar-nav w-100">
+          <a class="nav-item nav-link" href="/shop">Tất cả sản phẩm</a>
+          <% (locals.allCategories || []).forEach(cat => { %>
+            <a class="nav-item nav-link" href="/shop?category_id=<%= cat.id %>"><%= cat.name %></a>
+          <% }); %>
+        </div>
+      </nav>
+    </div>
+    <div class="col-lg-9">
+      <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-label="Mở menu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+          <div class="navbar-nav mr-auto py-0">
+            <a class="nav-item nav-link <%= currentPath === '/' ? 'active' : '' %>" href="/">Trang chủ</a>
+            <a class="nav-item nav-link <%= currentPath.startsWith('/shop') ? 'active' : '' %>" href="/shop">Sản phẩm</a>
+            <a class="nav-item nav-link <%= currentPath === '/showrooms' ? 'active' : '' %>" href="/showrooms">Showroom & Bản đồ</a>
+            <a class="nav-item nav-link <%= currentPath === '/bao-cao' ? 'active' : '' %>" href="/bao-cao">Báo cáo Đồ án</a>
+            
+            <% if (user) { %>
+              <% if (user.role === 'admin') { %>
+                <div class="nav-item dropdown">
+                  <a href="#" class="nav-link dropdown-toggle text-danger font-weight-bold" data-toggle="dropdown">
+                    <i class="fa fa-user-shield mr-1"></i> Quản trị
+                  </a>
+                  <div class="dropdown-menu rounded-0 m-0">
+                    <a href="/admin" class="dropdown-item">Dashboard thống kê</a>
+                    <a href="/admin/categories" class="dropdown-item">CN01 — Danh mục (Châu)</a>
+                    <a href="/admin/products" class="dropdown-item">CN02 — Sản phẩm (Danh)</a>
+                    <a href="/admin/orders" class="dropdown-item">CN06 — Đơn hàng (Kiều)</a>
+                  </div>
+                </div>
+              <% } else { %>
+                <a class="nav-item nav-link <%= currentPath === '/cart' ? 'active' : '' %>" href="/cart">Giỏ hàng</a>
+                <a class="nav-item nav-link <%= currentPath === '/checkout' ? 'active' : '' %>" href="/checkout">Thanh toán</a>
+                <a class="nav-item nav-link <%= currentPath.startsWith('/orders') ? 'active' : '' %>" href="/orders">Đơn của tôi</a>
+              <% } %>
+            <% } %>
+          </div>
+          <div class="navbar-nav ml-auto py-0">
+            <% if (!user) { %>
+              <a class="nav-item nav-link <%= currentPath === '/login' ? 'active' : '' %>" href="/login">Đăng nhập</a>
+              <a class="nav-item nav-link <%= currentPath === '/register' ? 'active' : '' %>" href="/register">Đăng ký</a>
+            <% } else { %>
+              <div class="d-flex align-items-center">
+                <img src="<%= user.avatar || '/template/eshopper/img/user.jpg' %>" alt="" class="rounded-circle mr-2" style="width: 32px; height: 32px; object-fit: cover;">
+                <span class="nav-item nav-link text-dark font-weight-bold p-0 mr-3">
+                  <%= user.name %>
+                  <span class="<%= user.role === 'admin' ? 'badge-role-admin' : 'badge-role-user' %> ml-1"><%= user.role %></span>
+                </span>
+                <form method="POST" action="/logout" class="d-flex align-items-center mb-0">
+                  <button type="submit" class="btn btn-sm btn-outline-primary">Đăng xuất</button>
+                </form>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="container-fluid px-xl-5 pt-3">
+    <%- include('alerts') %>
+  </div>

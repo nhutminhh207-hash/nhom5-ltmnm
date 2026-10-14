@@ -1,0 +1,148 @@
+</main>
+
+<footer class="container-fluid bg-secondary text-dark mt-5 pt-5">
+  <div class="row px-xl-5 pt-5">
+    <div class="col-lg-4 mb-5">
+      <h2 class="font-weight-semi-bold mb-4">
+        <span class="text-primary font-weight-bold border border-white px-3 mr-1">E</span>Shopper
+      </h2>
+      <p>Khám phá áo thun, áo sơ mi và quần thời trang chất lượng cao cho phong cách năng động mỗi ngày.</p>
+      <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>68 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh</p>
+      <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>support@eshopper.vn</p>
+      <p class="mb-0"><i class="fa fa-phone-alt text-primary mr-3"></i>028 3822 9999</p>
+    </div>
+    <div class="col-lg-4 mb-5">
+      <h5 class="font-weight-bold mb-4">Liên kết Nhanh</h5>
+      <div class="d-flex flex-column">
+        <a class="text-dark mb-2" href="/"><i class="fa fa-angle-right mr-2"></i>Trang chủ</a>
+        <a class="text-dark mb-2" href="/shop"><i class="fa fa-angle-right mr-2"></i>Sản phẩm</a>
+        <a class="text-dark mb-2" href="/cart"><i class="fa fa-angle-right mr-2"></i>Giỏ hàng</a>
+        <a class="text-dark mb-2" href="/showrooms"><i class="fa fa-angle-right mr-2"></i>Hệ thống Showroom</a>
+        <a class="text-dark mb-2" href="/bao-cao"><i class="fa fa-angle-right mr-2"></i>Báo cáo Đồ án (ERD & Use Case)</a>
+      </div>
+    </div>
+    <div class="col-lg-4 mb-5">
+      <h5 class="font-weight-bold mb-4">Đồ án Lập trình Web</h5>
+      <p class="small text-muted mb-2">Đề tài: Xây dựng Website Bán hàng Thời trang EShopper</p>
+      <p class="small text-muted mb-2">Nhóm sinh viên thực hiện: Châu, Danh, Nhựt, Anh Tú, Kiều</p>
+      <p class="small text-muted mb-3">Công nghệ: Laravel 11 / Node.js 22 + MySQL + Blade + Bootstrap</p>
+      <div class="d-flex">
+        <a href="/bao-cao" class="btn btn-outline-primary btn-sm font-weight-bold">
+          <i class="fa fa-book-open mr-1"></i> Xem chi tiết Báo cáo
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="row border-top border-light mx-xl-5 py-4">
+    <div class="col-md-8">
+      &copy; EShopper Fashion Shop — Đồ án Lập trình Web. Giao diện thiết kế bởi <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com" target="_blank" rel="noreferrer">HTML Codex</a>.
+    </div>
+    <div class="col-md-4 text-md-right">
+      <img src="/template/eshopper/img/payments.png" alt="Các phương thức thanh toán" class="img-fluid">
+    </div>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="/template/eshopper/lib/easing/easing.min.js"></script>
+<script src="/template/eshopper/lib/owlcarousel/owl.carousel.min.js"></script>
+<script src="/template/eshopper/js/main.js"></script>
+
+<!-- AJAX Live Search & Toast Helper Script -->
+<script>
+function showToast(title, message, isError = false) {
+  const toast = document.getElementById('appToast');
+  if (!toast) return;
+  document.getElementById('toastTitle').textContent = title;
+  document.getElementById('toastMessage').textContent = message;
+  toast.className = `alert ${isError ? 'alert-danger' : 'alert-success'} shadow-lg border-0 d-flex align-items-center`;
+  toast.style.display = 'flex';
+  setTimeout(() => {
+    toast.style.display = 'none';
+  }, 3500);
+}
+
+// Live Search Autocomplete
+const searchInput = document.getElementById('headerSearchInput');
+const searchResults = document.getElementById('ajaxSearchResults');
+let searchTimeout = null;
+
+if (searchInput && searchResults) {
+  searchInput.addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    const q = this.value.trim();
+    if (q.length < 2) {
+      searchResults.style.display = 'none';
+      searchResults.innerHTML = '';
+      return;
+    }
+
+    searchTimeout = setTimeout(() => {
+      fetch(`/api/search?q=${encodeURIComponent(q)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.items || data.items.length === 0) {
+            searchResults.innerHTML = '<div class="p-3 text-muted text-center small">Không tìm thấy sản phẩm phù hợp.</div>';
+            searchResults.style.display = 'block';
+            return;
+          }
+
+          let html = '';
+          data.items.slice(0, 5).forEach(item => {
+            html += `
+              <a href="/shop/${item.id}" class="ajax-search-item">
+                <img src="/template/eshopper/img/product-${item.image_index || 1}.jpg" style="width: 36px; height: 36px; object-fit: cover;" class="mr-2 rounded">
+                <div class="flex-grow-1">
+                  <div class="font-weight-bold small text-dark">${item.name}</div>
+                  <div class="small text-muted">${item.category ? item.category.name : 'Thời trang'} — <span class="text-primary font-weight-bold">Từ ${item.min_price ? Number(item.min_price).toLocaleString('vi-VN') + ' đ' : ''}</span></div>
+                </div>
+              </a>
+            `;
+          });
+          html += `<div class="p-2 text-center bg-light"><a href="/shop?q=${encodeURIComponent(q)}" class="small font-weight-bold text-primary">Xem tất cả ${data.items.length} kết quả &rarr;</a></div>`;
+          searchResults.innerHTML = html;
+          searchResults.style.display = 'block';
+        })
+        .catch(err => console.error('Search error:', err));
+    }, 250);
+  });
+
+  // Hide on click outside
+  document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+      searchResults.style.display = 'none';
+    }
+  });
+}
+
+// AJAX Add to Cart Function
+function ajaxAddToCart(variantId, quantity = 1, e) {
+  if (e) e.preventDefault();
+  fetch('/api/cart/add', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ variant_id: variantId, quantity: quantity })
+  })
+  .then(res => res.json().then(data => ({ status: res.status, body: data })))
+  .then(({ status, body }) => {
+    if (status === 200 && body.success) {
+      showToast('Đã thêm vào giỏ!', body.message || 'Sản phẩm đã được thêm vào giỏ hàng.');
+      const cartCountEl = document.getElementById('globalCartCount');
+      if (cartCountEl && body.cartCount !== undefined) {
+        cartCountEl.textContent = body.cartCount;
+      }
+    } else if (status === 401 || body.redirect) {
+      window.location.href = '/login';
+    } else {
+      showToast('Thông báo', body.error || 'Không thể thêm vào giỏ.', true);
+    }
+  })
+  .catch(err => {
+    console.error('AJAX cart error:', err);
+    showToast('Lỗi', 'Không thể kết nối máy chủ.', true);
+  });
+}
+</script>
+</body>
+</html>
